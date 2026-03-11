@@ -1,0 +1,14 @@
+{
+  "extensionId": "bokocgkibgaggffhmbpndbkcpjbickec",
+  "autoSaveScreenshots": true,
+  "routes": {
+    "main": [
+      "http://localhost:3000"
+    ]
+  },
+  "selectors": {
+    "chatgpt": {
+      "input": "#prompt-textarea"
+    }
+  }
+}
