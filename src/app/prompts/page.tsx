@@ -233,18 +233,22 @@ const HUB_PRODUCTS: HubProduct[] = [
     description:
       "The flagship outdoor smart parcel locker. Freestanding unit accessible from both sides, designed for high-traffic sidewalks and public spaces. Light grey powder-coated steel body with flat roof overhang.",
     specs: [
+      "Height: 215 cm",
+      "Depth: 125.5 cm",
+      "Length per frame: 66.5 cm",
+      "Length (5 frames): 332.5 cm",
       "Light grey powder-coated steel",
-      "\"bace\" logo in black lowercase sans-serif on side panels",
+      "\"bace\" logo in black lowercase (custom geometric sans-serif) on side panels",
       "Flat roof with slight overhang and dark trim edge",
-      "Front: grid of compartment doors in varying sizes (small top, larger bottom)",
-      "QR code + \"Scan here\" label on front face",
-      "Model ID printed top-right (e.g. BUEXE-A / BUEXE-B)",
-      "URL reference: qr.bacehub.de printed on top edge",
+      "Front + back: grid of compartment doors in varying sizes (small top, larger bottom)",
+      "QR code with \"bace\" centered + \"scan me\" label on front face",
+      "Hub name (e.g. BELLA, BUEXE-A) printed top-right corner",
+      "URL: qr.bacehub.de/[name] printed on top edge",
       "Double-sided: lockers accessible from both front and back",
-      "Approx. 2m wide x 1.5m tall x 1m deep",
+      "Modular frame system (expandable by adding frames)",
       "Sits on concrete/paved ground pad",
     ],
-    promptBlock: `The bace Hub Double-Sided is a freestanding outdoor smart parcel locker made of light grey powder-coated steel with a flat roof and slight overhang with dark trim. The "bace" logo appears in lowercase black sans-serif typography on the side panels. The front panel has a grid of compartment doors in varying sizes — smaller compartments at the top, larger at the bottom. A QR code with "Scan here" label is visible on the front face. The unit is approximately 2 meters wide, 1.5 meters tall, and accessible from both sides. It sits on a concrete ground pad in an urban street environment.`,
+    promptBlock: `The bace Hub Double-Sided is a freestanding outdoor smart parcel locker made of light grey powder-coated steel. It stands 2.15 meters tall, 1.25 meters deep, and approximately 3.3 meters long (5-frame configuration). It has a flat roof with a slight overhang and dark trim edge. The "bace" logo appears in lowercase black custom geometric sans-serif typography on both side panels. Both front and back panels have a grid of compartment doors in varying sizes — smaller compartments at the top, larger at the bottom. A QR code with the "bace" wordmark centered inside it and a "scan me" label are visible on the front face. The hub name and URL (qr.bacehub.de) are printed on the top edge. It sits on a concrete ground pad in an urban street environment.`,
     images: [
       "/images/bace/hub-double-front-group.png",
       "/images/bace/hub-double-side-person.jpeg",
@@ -258,16 +262,20 @@ const HUB_PRODUCTS: HubProduct[] = [
     description:
       "Compact outdoor version for wall-adjacent or space-constrained placements. Same design language as the Double-Sided but with locker access from one side only. Ideal for building facades and narrow sidewalks.",
     specs: [
-      "Same light grey powder-coated steel finish",
-      "\"bace\" logo in black lowercase on side panel",
+      "Height: 215 cm",
+      "Depth: 75 cm",
+      "Length per frame: 66.5 cm",
+      "Length (5 frames): 332.5 cm",
+      "Light grey powder-coated steel",
+      "\"bace\" logo in black lowercase (custom geometric sans-serif) on side panel",
       "Single-access front: grid of compartment doors",
       "Closed rear panel (can be placed against walls)",
-      "QR code + \"Scan here\" on front face",
+      "QR code with \"bace\" centered + \"scan me\" label on front face",
       "Flat roof with dark trim overhang",
-      "Narrower depth than Double-Sided",
-      "Approx. 2m wide x 1.5m tall",
+      "Modular frame system (expandable)",
+      "Significantly shallower depth (75 cm vs 125.5 cm)",
     ],
-    promptBlock: `The bace Hub Single-Sided is a compact outdoor smart parcel locker made of light grey powder-coated steel with a flat roof and dark trim. The "bace" logo appears in lowercase black sans-serif on the side panel. The front has a grid of compartment doors in varying sizes with a QR code and "Scan here" label. The rear panel is closed, allowing wall-adjacent placement. Same design language as the Double-Sided hub but with a narrower profile.`,
+    promptBlock: `The bace Hub Single-Sided is a compact outdoor smart parcel locker made of light grey powder-coated steel. It stands 2.15 meters tall, 75 cm deep, and approximately 3.3 meters long (5-frame configuration). It has a flat roof with dark trim overhang. The "bace" logo appears in lowercase black custom geometric sans-serif on the side panel. The front has a grid of compartment doors in varying sizes with a QR code (with "bace" centered) and "scan me" label. The rear panel is closed, allowing wall-adjacent placement. Same modular frame design as the Double-Sided hub but with a shallower profile.`,
     images: [],
   },
   {
@@ -278,14 +286,14 @@ const HUB_PRODUCTS: HubProduct[] = [
       "Deployable parcel hub on wheels for events, pop-ups, and temporary locations. Can be transported and repositioned. Same bace design language adapted for mobility.",
     specs: [
       "Light grey powder-coated steel body",
-      "\"bace\" branding in black lowercase",
+      "\"bace\" logo in black lowercase (custom geometric sans-serif)",
       "Integrated wheels / transport base",
       "Compact footprint for temporary deployment",
       "Fewer compartments than fixed hubs",
-      "QR code access system",
+      "QR code with \"bace\" centered + \"scan me\" access system",
       "Designed for events, festivals, pop-up retail",
     ],
-    promptBlock: `The bace Mobile Hub is a transportable smart parcel locker on wheels made of light grey powder-coated steel. It carries the "bace" logo in lowercase black sans-serif. Compact design with fewer compartments, built for temporary deployment at events, pop-ups, and festivals. Same clean industrial aesthetic as the fixed bace Hubs.`,
+    promptBlock: `The bace Mobile Hub is a transportable smart parcel locker on wheels made of light grey powder-coated steel. It carries the "bace" logo in lowercase black custom geometric sans-serif. Compact design with fewer compartments, built for temporary deployment at events, pop-ups, and festivals. Same clean industrial aesthetic as the fixed bace Hubs. QR code with "bace" centered and "scan me" label for user access.`,
     images: [],
   },
   {
@@ -296,15 +304,57 @@ const HUB_PRODUCTS: HubProduct[] = [
       "Interior version for lobbies, coworking spaces, residential buildings, and retail environments. Sleeker profile adapted for indoor contexts while maintaining the bace design identity.",
     specs: [
       "Light grey or white powder-coated steel",
-      "\"bace\" branding in black lowercase",
+      "\"bace\" logo in black lowercase (custom geometric sans-serif)",
       "Slimmer profile for indoor spaces",
       "Grid of compartment doors",
-      "QR code / digital access system",
+      "QR code with \"bace\" centered + \"scan me\" access system",
       "No weather protection needed (no roof overhang)",
       "Designed for lobbies, offices, residential buildings",
     ],
-    promptBlock: `The bace Indoor Hub is a sleek indoor smart parcel locker made of light grey or white powder-coated steel. The "bace" logo appears in lowercase black sans-serif. Slimmer profile than outdoor hubs, with a grid of compartment doors and QR code access. Designed for building lobbies, coworking spaces, and residential buildings. Clean, minimal industrial design.`,
+    promptBlock: `The bace Indoor Hub is a sleek indoor smart parcel locker made of light grey or white powder-coated steel. The "bace" logo appears in lowercase black custom geometric sans-serif. Slimmer profile than outdoor hubs, with a grid of compartment doors. QR code with "bace" centered and "scan me" label for user access. Designed for building lobbies, coworking spaces, and residential buildings. Clean, minimal industrial design.`,
     images: [],
+  },
+];
+
+// ─── Brand Assets ────────────────────────────────────────────────────────────
+
+interface BrandAsset {
+  id: string;
+  label: string;
+  description: string;
+  image: string;
+}
+
+const BRAND_ASSETS: BrandAsset[] = [
+  {
+    id: "logo",
+    label: "bace Logo",
+    description: "Custom geometric sans-serif wordmark, all lowercase. Black on light backgrounds.",
+    image: "/images/bace/brand/bace-logo.png",
+  },
+  {
+    id: "qr-code",
+    label: "QR Code",
+    description: "Black QR code with \"bace\" wordmark centered inside. Used on every hub front face.",
+    image: "/images/bace/brand/qr-code-bace.png",
+  },
+  {
+    id: "hub-name",
+    label: "Hub Name Sticker",
+    description: "Each hub has a unique name (e.g. BELLA, BUEXE). Printed in uppercase black geometric sans-serif.",
+    image: "/images/bace/brand/bella-sticker.png",
+  },
+  {
+    id: "url-label",
+    label: "URL Label",
+    description: "qr.bacehub.de/[name] — printed on hub top edge in black lowercase.",
+    image: "/images/bace/brand/qr-url-bella.png",
+  },
+  {
+    id: "scan-me",
+    label: "Scan Me Label",
+    description: "\"scan me\" in lowercase black geometric sans-serif. Placed next to QR code on front face.",
+    image: "/images/bace/brand/scan-me.png",
   },
 ];
 
@@ -1494,6 +1544,95 @@ export default function PromptsPage() {
                   </div>
                 );
               })}
+            </div>
+
+            {/* Brand Assets */}
+            <div style={{ marginTop: "64px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                  paddingBottom: "16px",
+                  borderBottom: `1px solid ${BORDER}`,
+                  marginBottom: "32px",
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 500,
+                    fontSize: "clamp(22px, 2.5vw, 32px)",
+                    letterSpacing: "-0.02em",
+                    color: TEXT,
+                    lineHeight: 1.15,
+                  }}
+                >
+                  Brand <em style={{ fontStyle: "italic" }}>assets</em>
+                </h3>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: TEXT_MUTED }}>
+                  Elements visible on every hub
+                </span>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(5, 1fr)",
+                  gap: "16px",
+                }}
+              >
+                {BRAND_ASSETS.map((asset) => (
+                  <div key={asset.id}>
+                    <div
+                      style={{
+                        backgroundColor: BG_SUBTLE,
+                        border: `1px solid ${BORDER}`,
+                        aspectRatio: "1",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "20px",
+                        marginBottom: "12px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={asset.image}
+                        alt={asset.label}
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          objectFit: "contain",
+                          display: "block",
+                        }}
+                      />
+                    </div>
+                    <h4
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontWeight: 500,
+                        fontSize: "14px",
+                        color: TEXT,
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {asset.label}
+                    </h4>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "11px",
+                        lineHeight: 1.5,
+                        color: TEXT_MUTED,
+                      }}
+                    >
+                      {asset.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Usage guide */}
