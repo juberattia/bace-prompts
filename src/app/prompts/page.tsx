@@ -683,6 +683,38 @@ export default function PromptsPage() {
     { key: "hardware", label: "Hardware" },
   ];
 
+  const heroImages: Record<Tab, { src: string; title: string; subtitle: string }> = {
+    scenes: {
+      src: "/images/bace/hero-hub-greenery.jpg",
+      title: "The visual",
+      subtitle: "12 canonical scenes that define the entire bace visual universe. Every photo, AI image, campaign or social visual is a variation of one of these scenes.",
+    },
+    categories: {
+      src: "/images/bace/hub-double-61.jpg",
+      title: "Master",
+      subtitle: "Four prompt categories for different use cases. Pick the right one, customize with scene-specific details, and generate consistent visuals.",
+    },
+    dna: {
+      src: "/images/bace/hub-double-64.jpg",
+      title: "Visual",
+      subtitle: "The core DNA block that must be included in every prompt. Encodes the visual language calibrated from the bace moodboard.",
+    },
+    hardware: {
+      src: "/images/bace/hub-double-68-1.jpg",
+      title: "Hardware",
+      subtitle: "The bace Hub product lineup. Reference images and prompt blocks to ensure AI-generated visuals accurately represent the hardware.",
+    },
+  };
+
+  const heroAccents: Record<Tab, string> = {
+    scenes: "system",
+    categories: "prompts",
+    dna: "DNA",
+    hardware: "reference",
+  };
+
+  const currentHero = heroImages[activeTab];
+
   return (
     <div style={{ backgroundColor: BG, minHeight: "100vh", color: TEXT }}>
       {/* ── Nav ── */}
@@ -714,7 +746,7 @@ export default function PromptsPage() {
           <img
             src="/images/bace/brand/bace-logo.png"
             alt="bace"
-            style={{ height: "20px", width: "auto", display: "block" }}
+            style={{ height: "40px", width: "auto", display: "block" }}
           />
         </button>
 
@@ -725,14 +757,15 @@ export default function PromptsPage() {
               onClick={() => setActiveTab(tab.key)}
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "12px",
+                fontSize: "13px",
+                fontWeight: 700,
                 letterSpacing: "0.04em",
-                color: activeTab === tab.key ? "#ffffff" : "rgba(255,255,255,0.55)",
+                color: activeTab === tab.key ? TEXT : "rgba(0,0,0,0.5)",
                 backgroundColor: "transparent",
                 border: "none",
                 cursor: "pointer",
                 padding: "4px 0",
-                borderBottom: activeTab === tab.key ? `1.5px solid ${NEON_GREEN}` : "1.5px solid transparent",
+                borderBottom: activeTab === tab.key ? `2px solid ${NEON_GREEN}` : "2px solid transparent",
                 transition: "color 0.25s ease, border-color 0.25s ease, text-shadow 0.25s ease",
               }}
               onMouseEnter={(e) => {
@@ -742,7 +775,7 @@ export default function PromptsPage() {
               }}
               onMouseLeave={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.color = activeTab === tab.key ? "#ffffff" : "rgba(255,255,255,0.55)";
+                btn.style.color = activeTab === tab.key ? TEXT : "rgba(0,0,0,0.5)";
                 btn.style.textShadow = "none";
               }}
             >
@@ -774,7 +807,7 @@ export default function PromptsPage() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/bace/hero-hub-greenery.jpg"
+            src={currentHero.src}
             alt=""
             style={{
               width: "100%",
@@ -782,6 +815,7 @@ export default function PromptsPage() {
               objectFit: "cover",
               objectPosition: "center 60%",
               display: "block",
+              transition: "opacity 0.5s ease",
             }}
           />
           {/* Gradient overlay */}
@@ -816,7 +850,7 @@ export default function PromptsPage() {
               marginBottom: "20px",
             }}
           >
-            The visual <em style={{ fontStyle: "italic" }}>system</em>
+            {currentHero.title} <em style={{ fontStyle: "italic" }}>{heroAccents[activeTab]}</em>
           </h1>
           <p
             style={{
@@ -828,8 +862,7 @@ export default function PromptsPage() {
               fontWeight: 400,
             }}
           >
-            12 canonical scenes that define the entire bace visual universe.
-            Every photo, AI image, campaign or social visual is a variation of one of these scenes.
+            {currentHero.subtitle}
           </p>
         </div>
       </section>
