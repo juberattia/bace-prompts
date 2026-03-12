@@ -13,322 +13,236 @@ const BORDER = "#e8e8e8";
 const DARK = "#111111";
 // ─────────────────────────────────────────────────────────────────────────────
 
-// ─── Master Prompt Data ──────────────────────────────────────────────────────
+// ─── Visual DNA ──────────────────────────────────────────────────────────────
 
-interface PromptBlock {
-  label: string;
-  value: string;
+const VISUAL_DNA = `Photorealistic editorial lifestyle photography in a vibrant urban environment.
+
+Strong natural sunlight with visible highlights and shadows. Warm daylight with saturated but natural colors. Bright atmosphere similar to contemporary street photography and modern lifestyle campaigns.
+
+Shot with a slightly wide angle lens (approx. 28mm\u201335mm) creating dynamic perspective and spatial depth.
+
+Camera positioned close to the action (around 1\u20132 meters). Slightly low or slightly high angle allowed. Composition feels spontaneous and not perfectly centered.
+
+Foreground elements such as hands, bags, drinks, bicycles, parcels or tables may appear partially cropped in the frame.
+
+Urban textures visible: pavement, concrete, asphalt, glass storefronts, metal surfaces, cars, bicycles, trees, benches or street infrastructure.
+
+People feel authentic and relaxed, mid-action moments such as talking, laughing, picking something up, drinking, walking or exchanging objects.
+
+The mood is lively, warm, social and slightly playful, capturing everyday urban micro-moments.
+
+The bace Hub appears naturally integrated in the scene and part of everyday city life.`;
+
+const ENERGY_BOOST =
+  "captured in the style of modern street lifestyle campaigns, dynamic editorial photography";
+
+// ─── 12 Canonical Scenes ─────────────────────────────────────────────────────
+
+interface CanonicalScene {
+  id: string;
+  num: string;
+  title: string;
+  titleAccent: string;
+  story: string;
+  composition: string[];
+  prompt: string;
+  images: string[];
 }
 
-interface MasterPrompt {
+const CANONICAL_SCENES: CanonicalScene[] = [
+  {
+    id: "pickup-moment",
+    num: "01",
+    title: "The Pickup",
+    titleAccent: "Moment",
+    story: "A person retrieves a parcel from the Hub during their daily routine.",
+    composition: ["Medium shot", "Person slightly off-center", "Hub compartment open", "Parcel clearly visible"],
+    prompt: `Photorealistic editorial street photography in a vibrant European city environment.\n\nA person casually takes a parcel box out of an open compartment of the bace Hub on a sunny city sidewalk.\n\nNatural sunlight with warm highlights and shadows on the pavement. Urban background with bicycles, storefronts and pedestrians.\n\nShot with a slightly wide lens (28\u201335mm), camera close to the subject, dynamic framing.\n\nAuthentic everyday moment showing a simple package pickup during a daily routine.`,
+    images: ["/images/bace/street-retrieval.jpg", "/images/bace/cafe-scene.jpg"],
+  },
+  {
+    id: "the-return",
+    num: "02",
+    title: "The",
+    titleAccent: "Return",
+    story: "A user places a parcel into the Hub.",
+    composition: ["Close shot", "Hands + parcel + open compartment"],
+    prompt: `Photorealistic close lifestyle shot of hands placing a parcel box into an open bace Hub compartment.\n\nStrong natural sunlight with shadows and reflections on metal surfaces.\n\nUrban textures visible in the background such as pavement and bicycles.\n\nShot with shallow depth of field and editorial street photography style.`,
+    images: ["/images/bace/package-insert.jpg", "/images/bace/qr-closeup.jpg"],
+  },
+  {
+    id: "multi-package",
+    num: "03",
+    title: "The Multi-Package",
+    titleAccent: "Pickup",
+    story: "Someone collects multiple deliveries at once.",
+    composition: ["Medium shot", "Person holding 2\u20133 parcels", "Hub behind them"],
+    prompt: `Photorealistic urban lifestyle scene showing a person holding multiple parcel boxes after collecting them from a bace Hub.\n\nSunny city sidewalk with trees, bicycles and storefronts.\n\nWide-angle perspective (28\u201335mm) with warm vibrant daylight.\n\nAuthentic spontaneous moment during everyday city life.`,
+    images: ["/images/bace/brick-building.jpg", "/images/bace/busy-street.jpg"],
+  },
+  {
+    id: "instant-buy",
+    num: "04",
+    title: "The Instant",
+    titleAccent: "Buy",
+    story: "A customer leaves the Hub with a purchased item.",
+    composition: ["Person holding branded shopping bag or product", "Hub visible behind"],
+    prompt: `Photorealistic editorial street scene showing a person leaving a bace Hub holding a shopping bag after purchasing an item.\n\nBright natural sunlight and lively city atmosphere.\n\nUrban background with benches, bicycles and storefront reflections.\n\nDynamic wide-angle perspective.`,
+    images: ["/images/bace/cobblestone-pickup.jpg"],
+  },
+  {
+    id: "social-hub",
+    num: "05",
+    title: "The Social Hub",
+    titleAccent: "Moment",
+    story: "Friends hanging around the Hub.",
+    composition: ["Small group", "Hub visible", "Urban seating / bench"],
+    prompt: `Photorealistic urban lifestyle scene showing a small group of friends meeting near a bace Hub on a sunny city street.\n\nPeople sit on benches or stand casually talking and laughing.\n\nBright natural sunlight with vibrant colors and urban textures.\n\nWide-angle editorial street photography style.`,
+    images: ["/images/bace/group-friends.jpg", "/images/bace/community-gather.jpg", "/images/bace/summer-pickup.jpg"],
+  },
+  {
+    id: "bike-stop",
+    num: "06",
+    title: "The Bike",
+    titleAccent: "Stop",
+    story: "Cyclist briefly stops to use the Hub.",
+    composition: ["Bike foreground", "Person interacting with Hub"],
+    prompt: `Photorealistic urban street scene showing a cyclist stopping at a bace Hub to retrieve a parcel.\n\nThe bicycle appears in the foreground while the person opens a Hub compartment.\n\nSunny European city environment with pavement, trees and storefronts.\n\nDynamic wide-angle street photography perspective.`,
+    images: ["/images/bace/cyclist-pickup.jpg"],
+  },
+  {
+    id: "office-run",
+    num: "07",
+    title: "The Office",
+    titleAccent: "Run",
+    story: "A professional collects a parcel during work.",
+    composition: ["Laptop bag", "Office district", "Hub interaction"],
+    prompt: `Photorealistic editorial street photography showing an urban professional collecting a parcel from a bace Hub during a workday.\n\nModern office district environment with glass buildings and clean sidewalks.\n\nNatural sunlight with strong highlights and shadows.\n\nDynamic wide-angle perspective capturing a quick everyday work routine moment.`,
+    images: ["/images/bace/business-district.jpg"],
+  },
+  {
+    id: "passing-moment",
+    num: "08",
+    title: "The Passing",
+    titleAccent: "Moment",
+    story: "Someone walks past the Hub with shopping bags.",
+    composition: ["Movement", "Hub background", "Motion feeling"],
+    prompt: `Photorealistic street photography capturing a person walking past a bace Hub carrying shopping bags.\n\nThe Hub appears naturally in the background.\n\nSunny urban environment with pavement, bicycles and city textures.\n\nShot with a wide-angle lens capturing movement and spontaneous city life.`,
+    images: ["/images/bace/cobblestone-cafe.jpg"],
+  },
+  {
+    id: "courier-load",
+    num: "09",
+    title: "The Courier",
+    titleAccent: "Load",
+    story: "Courier placing parcels into the Hub.",
+    composition: ["Multiple parcels", "Hub open", "Action moment"],
+    prompt: `Photorealistic urban logistics moment showing a courier placing multiple parcels into open compartments of a bace Hub.\n\nCity sidewalk environment with bicycles and urban textures.\n\nStrong natural sunlight creating bright highlights and shadows.\n\nEditorial documentary street photography style.`,
+    images: ["/images/bace/hi-vis-courier.png", "/images/bace/courier-loading.jpg"],
+  },
+  {
+    id: "micro-interaction",
+    num: "10",
+    title: "The Micro",
+    titleAccent: "Interaction",
+    story: "Hands opening Hub door.",
+    composition: ["Extreme close-up", "Hands + lock / handle"],
+    prompt: `Photorealistic close-up shot of hands opening a bace Hub compartment door.\n\nStrong natural sunlight reflecting on metal surfaces.\n\nUrban textures visible in background.\n\nShallow depth of field capturing a tactile everyday interaction.`,
+    images: ["/images/bace/drawer-closeup.jpg"],
+  },
+  {
+    id: "urban-integration",
+    num: "11",
+    title: "The Urban",
+    titleAccent: "Integration",
+    story: "Wide city shot with Hub integrated in street life.",
+    composition: ["Wide shot", "Hub + pedestrians + city context"],
+    prompt: `Photorealistic wide urban street scene showing the bace Hub integrated into everyday city life.\n\nPeople walk, cycle and interact naturally around the Hub.\n\nSunny European neighborhood with storefronts, trees and bicycles.\n\nWide-angle editorial street photography capturing vibrant urban atmosphere.`,
+    images: ["/images/bace/split-view.jpg", "/images/bace/cafe-scene.jpg"],
+  },
+  {
+    id: "evening-city",
+    num: "12",
+    title: "The Evening City",
+    titleAccent: "Moment",
+    story: "Hub used during evening hours.",
+    composition: ["Warm sunset / evening light", "Hub glowing softly"],
+    prompt: `Photorealistic urban evening scene showing a person retrieving a parcel from a softly illuminated bace Hub at sunset.\n\nWarm golden light reflecting on city surfaces.\n\nCalm but lively street atmosphere with pedestrians and bicycles.\n\nEditorial lifestyle photography with cinematic evening tones.`,
+    images: ["/images/bace/cobblestone-cafe.jpg", "/images/bace/business-district.jpg"],
+  },
+];
+
+// ─── 4 Master Prompt Categories ──────────────────────────────────────────────
+
+interface MasterCategory {
   id: string;
   title: string;
   titleAccent: string;
-  scene: string;
-  fullPrompt: string;
-  images: string[];
-  blocks: {
-    scene: PromptBlock;
-    subject: PromptBlock;
-    lighting: PromptBlock;
-    atmosphere: PromptBlock;
-    style: PromptBlock;
-    camera: PromptBlock;
-  };
-  tags: string[];
+  purpose: string;
+  prompt: string;
 }
 
-const MASTER_PROMPTS: MasterPrompt[] = [
+const MASTER_CATEGORIES: MasterCategory[] = [
   {
-    id: "hub-sunset-retrieval",
-    title: "Hub Sunset",
-    titleAccent: "Retrieval",
-    scene: "Urban evening, parcel pickup",
-    fullPrompt:
-      "Photorealistic urban evening scene showing a person retrieving a parcel from a softly illuminated bace Hub at sunset. Warm golden light reflecting on city surfaces. Calm but lively street atmosphere with pedestrians and bicycles. Editorial lifestyle photography with cinematic evening tones.",
-    images: [
-      "/images/bace/cafe-scene.jpg",
-      "/images/bace/cobblestone-cafe.jpg",
-      "/images/bace/business-district.jpg",
-    ],
-    blocks: {
-      scene: { label: "Scene", value: "Photorealistic urban evening scene" },
-      subject: {
-        label: "Subject",
-        value: "A person retrieving a parcel from a softly illuminated bace Hub at sunset",
-      },
-      lighting: { label: "Lighting", value: "Warm golden light reflecting on city surfaces" },
-      atmosphere: {
-        label: "Atmosphere",
-        value: "Calm but lively street atmosphere with pedestrians and bicycles",
-      },
-      style: {
-        label: "Style",
-        value: "Editorial lifestyle photography with cinematic evening tones",
-      },
-      camera: {
-        label: "Camera",
-        value: "Medium-wide shot, shallow depth of field, golden hour color grade",
-      },
-    },
-    tags: ["Golden Hour", "Urban", "Lifestyle", "Editorial"],
+    id: "service",
+    title: "Service",
+    titleAccent: "Visual",
+    purpose: "Clear service explanation images showing a person interacting with the Hub.",
+    prompt: `Photorealistic editorial lifestyle image of a person interacting with the bace Hub in a lively urban street.\n\nClose to medium framing. The person is the clear focal point.\n\nThe person is performing one simple action such as taking a parcel from the Hub, placing a return box inside, or holding a shopping bag after a pickup.\n\nThe bace Hub is visible nearby but does not dominate the image.\n\nBright natural sunlight creates sharp shadows on the pavement and highlights on surfaces.\n\nUrban environment with bicycles, trees, storefronts or street seating in the background.\n\nShot with a wide-angle lens (28\u201335mm feel) from a slightly dynamic perspective.\n\nAuthentic moment of everyday city life. The scene feels spontaneous, relaxed and human.`,
   },
   {
-    id: "hub-morning-commute",
-    title: "Hub Morning",
-    titleAccent: "Commute",
-    scene: "City morning, quick pickup",
-    fullPrompt:
-      "Photorealistic early morning cityscape showing a young professional collecting a package from a bace Hub on their commute. Crisp blue-hour light transitioning to warm sunrise. Quiet streets with soft fog and the first cyclists of the day. Editorial lifestyle photography with clean, aspirational morning tones.",
-    images: [
-      "/images/bace/street-retrieval.jpg",
-      "/images/bace/package-insert.jpg",
-      "/images/bace/qr-closeup.jpg",
-    ],
-    blocks: {
-      scene: { label: "Scene", value: "Photorealistic early morning cityscape" },
-      subject: {
-        label: "Subject",
-        value: "A young professional collecting a package from a bace Hub on their commute",
-      },
-      lighting: { label: "Lighting", value: "Crisp blue-hour light transitioning to warm sunrise" },
-      atmosphere: {
-        label: "Atmosphere",
-        value: "Quiet streets with soft fog and the first cyclists of the day",
-      },
-      style: {
-        label: "Style",
-        value: "Editorial lifestyle photography with clean, aspirational morning tones",
-      },
-      camera: {
-        label: "Camera",
-        value: "Wide establishing shot, cool-to-warm color transition, natural grain",
-      },
-    },
-    tags: ["Blue Hour", "Urban", "Commute", "Aspirational"],
+    id: "lifestyle",
+    title: "Lifestyle",
+    titleAccent: "Visual",
+    purpose: "Social energy scenes showing people and urban life around the Hub.",
+    prompt: `Photorealistic editorial street lifestyle scene near a bace Hub in a vibrant city neighborhood.\n\nSmall group of diverse young adults interacting naturally in an urban outdoor setting.\n\nPeople are sitting, standing, talking, drinking coffee or passing by the Hub during their daily routines.\n\nStrong sunlight filtering through trees or buildings creating warm highlights and deep shadows.\n\nBright clothing colors, casual contemporary styling, relaxed atmosphere.\n\nUrban background with pavement, benches, storefronts, bicycles and city infrastructure.\n\nWide-angle perspective (28\u201335mm) with dynamic framing and slight foreground cropping.\n\nThe Hub is present in the environment but the main focus is the social urban moment.`,
   },
   {
-    id: "hub-rainy-night",
-    title: "Hub Rainy",
-    titleAccent: "Night",
-    scene: "Rainy evening, neon reflections",
-    fullPrompt:
-      "Photorealistic rainy night scene showing a person scanning their phone at a bace Hub, neon signage reflecting in wet pavement. Moody cinematic lighting with orange and teal color palette. Urban solitude with blurred passing traffic. Editorial photography with neo-noir atmosphere.",
-    images: [
-      "/images/bace/drawer-closeup.jpg",
-      "/images/bace/cobblestone-pickup.jpg",
-      "/images/bace/split-view.jpg",
-    ],
-    blocks: {
-      scene: { label: "Scene", value: "Photorealistic rainy night scene" },
-      subject: {
-        label: "Subject",
-        value: "A person scanning their phone at a bace Hub, neon signage reflecting in wet pavement",
-      },
-      lighting: {
-        label: "Lighting",
-        value: "Moody cinematic lighting with orange and teal color palette",
-      },
-      atmosphere: { label: "Atmosphere", value: "Urban solitude with blurred passing traffic" },
-      style: { label: "Style", value: "Editorial photography with neo-noir atmosphere" },
-      camera: {
-        label: "Camera",
-        value: "Low angle, wide aperture f/1.4, reflections in foreground puddles",
-      },
-    },
-    tags: ["Night", "Neo-Noir", "Cinematic", "Moody"],
+    id: "hero",
+    title: "Hub Hero",
+    titleAccent: "Visual",
+    purpose: "Website hero or campaign visuals with the Hub as centerpiece.",
+    prompt: `Photorealistic urban infrastructure scene featuring the bace Hub integrated into a lively city street.\n\nThe Hub is clearly visible and occupies roughly half of the frame.\n\nPeople naturally interact around it: one person opening a compartment, another walking past with a parcel, another arriving by bicycle.\n\nShot with strong natural sunlight producing vibrant colors and visible shadows across the pavement.\n\nUrban environment with storefronts, trees, benches and bicycles.\n\nWide-angle perspective around 28\u201335mm with slight low camera angle for energy.\n\nThe scene feels alive, social and embedded in everyday urban life.`,
   },
   {
-    id: "hub-residential-weekend",
-    title: "Hub Residential",
-    titleAccent: "Weekend",
-    scene: "Quiet neighborhood, weekend pickup",
-    fullPrompt:
-      "Photorealistic weekend scene in a residential European neighborhood showing a person casually walking to a bace Hub with a coffee in hand. Soft diffused afternoon light filtering through trees. Relaxed suburban atmosphere with children playing in the background. Editorial lifestyle photography with warm, authentic documentary feel.",
-    images: [
-      "/images/bace/summer-pickup.jpg",
-      "/images/bace/community-gather.jpg",
-      "/images/bace/group-friends.jpg",
-    ],
-    blocks: {
-      scene: {
-        label: "Scene",
-        value: "Photorealistic weekend scene in a residential European neighborhood",
-      },
-      subject: {
-        label: "Subject",
-        value: "A person casually walking to a bace Hub with a coffee in hand",
-      },
-      lighting: {
-        label: "Lighting",
-        value: "Soft diffused afternoon light filtering through trees",
-      },
-      atmosphere: {
-        label: "Atmosphere",
-        value: "Relaxed suburban atmosphere with children playing in the background",
-      },
-      style: {
-        label: "Style",
-        value: "Editorial lifestyle photography with warm, authentic documentary feel",
-      },
-      camera: {
-        label: "Camera",
-        value: "Medium shot, natural light, 35mm focal length, organic composition",
-      },
-    },
-    tags: ["Residential", "Weekend", "Documentary", "Warm"],
-  },
-  {
-    id: "hub-bike-courier",
-    title: "Hub Bike",
-    titleAccent: "Courier",
-    scene: "City center, courier drop-off",
-    fullPrompt:
-      "Photorealistic urban scene showing a bike courier depositing a package into a bace Hub on a busy European boulevard. Dynamic late-afternoon sidelight creating long shadows. Energetic city atmosphere with tram tracks and outdoor cafe terraces. Editorial action photography with European street culture vibe.",
-    images: [
-      "/images/bace/hi-vis-courier.png",
-      "/images/bace/cyclist-pickup.jpg",
-      "/images/bace/busy-street.jpg",
-    ],
-    blocks: {
-      scene: {
-        label: "Scene",
-        value: "Photorealistic urban scene on a busy European boulevard",
-      },
-      subject: {
-        label: "Subject",
-        value: "A bike courier depositing a package into a bace Hub",
-      },
-      lighting: {
-        label: "Lighting",
-        value: "Dynamic late-afternoon sidelight creating long shadows",
-      },
-      atmosphere: {
-        label: "Atmosphere",
-        value: "Energetic city atmosphere with tram tracks and outdoor cafe terraces",
-      },
-      style: {
-        label: "Style",
-        value: "Editorial action photography with European street culture vibe",
-      },
-      camera: {
-        label: "Camera",
-        value: "Tracking shot feel, slight motion blur on cyclist, sharp on Hub",
-      },
-    },
-    tags: ["Action", "European", "Dynamic", "Street Culture"],
-  },
-  {
-    id: "hub-winter-cozy",
-    title: "Hub Winter",
-    titleAccent: "Evening",
-    scene: "Winter city, warm contrast",
-    fullPrompt:
-      "Photorealistic winter evening scene showing a person in a warm coat retrieving a parcel from a glowing bace Hub surrounded by light snowfall. Warm amber Hub light contrasting with cool blue winter dusk. Cozy urban atmosphere with steaming breath and illuminated shop windows. Editorial lifestyle photography with hygge-inspired cinematic warmth.",
-    images: [
-      "/images/bace/brick-building.jpg",
-      "/images/bace/cobblestone-cafe.jpg",
-    ],
-    blocks: {
-      scene: {
-        label: "Scene",
-        value: "Photorealistic winter evening scene with light snowfall",
-      },
-      subject: {
-        label: "Subject",
-        value: "A person in a warm coat retrieving a parcel from a glowing bace Hub",
-      },
-      lighting: {
-        label: "Lighting",
-        value: "Warm amber Hub light contrasting with cool blue winter dusk",
-      },
-      atmosphere: {
-        label: "Atmosphere",
-        value: "Cozy urban atmosphere with steaming breath and illuminated shop windows",
-      },
-      style: {
-        label: "Style",
-        value: "Editorial lifestyle photography with hygge-inspired cinematic warmth",
-      },
-      camera: {
-        label: "Camera",
-        value: "Medium close-up, bokeh snow particles, warm-cool split toning",
-      },
-    },
-    tags: ["Winter", "Cozy", "Contrast", "Hygge"],
+    id: "micro",
+    title: "Micro",
+    titleAccent: "Detail",
+    purpose: "Close-up tactile shots of hands and objects interacting with the Hub.",
+    prompt: `Photorealistic close-up editorial shot capturing a small human interaction with the bace Hub.\n\nFocus on hands opening a Hub compartment, placing a parcel inside, or holding a delivered product.\n\nForeground object sharply visible while background shows urban textures such as pavement or metal surfaces.\n\nStrong natural sunlight creates bright highlights and shadows across the objects.\n\nShot with shallow depth of field, close framing and tactile realism.\n\nThe moment feels spontaneous and authentic, like a candid urban detail.`,
   },
 ];
-
-// ─── Reusable Style Building Blocks ──────────────────────────────────────────
-
-const STYLE_BUILDING_BLOCKS = {
-  sceneTypes: [
-    "Photorealistic urban evening scene",
-    "Photorealistic early morning cityscape",
-    "Photorealistic rainy night scene",
-    "Photorealistic weekend residential scene",
-    "Photorealistic winter evening scene",
-  ],
-  lightingModes: [
-    "Warm golden light reflecting on city surfaces",
-    "Crisp blue-hour light transitioning to warm sunrise",
-    "Moody cinematic lighting with orange and teal palette",
-    "Soft diffused afternoon light filtering through trees",
-    "Warm amber light contrasting with cool blue dusk",
-    "Dynamic late-afternoon sidelight creating long shadows",
-  ],
-  atmospheres: [
-    "Calm but lively street atmosphere with pedestrians and bicycles",
-    "Quiet streets with soft fog and the first cyclists of the day",
-    "Urban solitude with blurred passing traffic",
-    "Relaxed suburban atmosphere with children playing",
-    "Energetic city atmosphere with tram tracks and cafe terraces",
-    "Cozy urban atmosphere with steaming breath and shop windows",
-  ],
-  styles: [
-    "Editorial lifestyle photography with cinematic evening tones",
-    "Editorial lifestyle photography with clean, aspirational morning tones",
-    "Editorial photography with neo-noir atmosphere",
-    "Editorial lifestyle photography with warm, authentic documentary feel",
-    "Editorial action photography with European street culture vibe",
-    "Editorial lifestyle photography with hygge-inspired cinematic warmth",
-  ],
-  cameraSettings: [
-    "Medium-wide shot, shallow depth of field, golden hour color grade",
-    "Wide establishing shot, cool-to-warm color transition, natural grain",
-    "Low angle, wide aperture f/1.4, reflections in foreground puddles",
-    "Medium shot, natural light, 35mm focal length, organic composition",
-    "Tracking shot feel, slight motion blur on cyclist, sharp on Hub",
-    "Medium close-up, bokeh snow particles, warm-cool split toning",
-  ],
-};
 
 // ─── Visual Rules ────────────────────────────────────────────────────────────
 
-const VISUAL_RULES = [
-  { rule: "Always photorealistic", desc: "Never stylized, illustrated, or 3D-rendered" },
-  { rule: "bace Hub softly lit", desc: "The Hub glows \u2014 it\u2019s a warm beacon, never harsh" },
-  { rule: "Editorial lifestyle", desc: "Magazine-quality compositions, not stock photography" },
-  { rule: "European urban context", desc: "Cobblestones, trams, bike lanes, cafe culture" },
-  { rule: "Human interaction", desc: "Always show a person actively using the Hub" },
-  { rule: "Cinematic color grade", desc: "Warm/cool contrast, never flat or oversaturated" },
-  { rule: "Natural atmosphere", desc: "Real weather, real light, real street life" },
-  { rule: "Shallow depth of field", desc: "Hub and person sharp, environment softly blurred" },
+const VISUAL_CHARACTERISTICS = [
+  "Strong natural sunlight",
+  "High contrast shadows",
+  "Saturated but natural colors",
+  "Wide-angle perspective (28\u201335mm)",
+  "Close human interaction",
+  "Foreground objects (hands, bags, bikes)",
+  "Urban texture (pavement, glass, metal)",
+  "Candid social moments",
 ];
 
-const NEGATIVE_PROMPTS = [
-  "3D render or CGI look",
-  "Illustration or cartoon style",
-  "Stock photography feel",
-  "Oversaturated colors",
-  "Flat lighting, no shadows",
-  "Empty streets, no people",
-  "Generic American suburbia",
-  "Perfect symmetry, too staged",
-  "HDR tonemapping artifacts",
-  "Visible text or logos (except bace)",
-  "Indoor scenes",
-  "Night without any ambient light",
+const ACTION_VERBS = [
+  "opening",
+  "holding",
+  "drinking",
+  "walking",
+  "exchanging",
+  "placing",
+  "retrieving",
+  "laughing",
+  "talking",
+  "cycling",
+];
+
+const HIDDEN_RULE_ELEMENTS = [
+  "Hands interacting with objects",
+  "People in social micro-moments",
+  "Objects in use",
 ];
 
 // ─── Copy helper ─────────────────────────────────────────────────────────────
@@ -377,27 +291,20 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
   );
 }
 
-// ─── Prompt Card ─────────────────────────────────────────────────────────────
+// ─── Scene Card ──────────────────────────────────────────────────────────────
 
-function PromptCard({
-  prompt,
-  index,
+function SceneCard({
+  scene,
   expanded,
   onToggle,
 }: {
-  prompt: MasterPrompt;
-  index: number;
+  scene: CanonicalScene;
   expanded: boolean;
   onToggle: () => void;
 }) {
   return (
-    <div
-      style={{
-        borderBottom: `1px solid ${BORDER}`,
-        transition: "background-color 0.2s ease",
-      }}
-    >
-      {/* Card Header */}
+    <div style={{ borderBottom: `1px solid ${BORDER}` }}>
+      {/* Header */}
       <div
         onClick={onToggle}
         style={{
@@ -410,7 +317,6 @@ function PromptCard({
         }}
       >
         <div style={{ display: "flex", alignItems: "flex-start", gap: "32px", flex: 1, minWidth: 0 }}>
-          {/* Number */}
           <span
             style={{
               fontFamily: "var(--font-mono)",
@@ -422,18 +328,12 @@ function PromptCard({
               width: "28px",
             }}
           >
-            {String(index + 1).padStart(2, "0")}
+            {scene.num}
           </span>
 
           {/* Thumbnails */}
-          <div
-            style={{
-              display: "flex",
-              gap: "4px",
-              flexShrink: 0,
-            }}
-          >
-            {prompt.images.slice(0, 3).map((src, i) => (
+          <div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
+            {scene.images.slice(0, 3).map((src, i) => (
               <div
                 key={i}
                 style={{
@@ -469,7 +369,6 @@ function PromptCard({
           </div>
 
           <div style={{ minWidth: 0 }}>
-            {/* Title with italic accent */}
             <h3
               style={{
                 fontFamily: "var(--font-display)",
@@ -478,38 +377,36 @@ function PromptCard({
                 letterSpacing: "-0.02em",
                 color: TEXT,
                 lineHeight: 1.15,
-                marginBottom: "8px",
+                marginBottom: "6px",
               }}
             >
-              {prompt.title} <em style={{ fontStyle: "italic" }}>{prompt.titleAccent}</em>
+              {scene.title} <em style={{ fontStyle: "italic" }}>{scene.titleAccent}</em>
             </h3>
-
-            {/* Scene description */}
             <p
               style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                letterSpacing: "0.08em",
-                color: TEXT_MUTED,
+                fontFamily: "var(--font-display)",
+                fontSize: "14px",
+                color: TEXT_SECONDARY,
+                lineHeight: 1.5,
+                marginBottom: "10px",
               }}
             >
-              {prompt.scene}
+              {scene.story}
             </p>
-
-            {/* Tags */}
-            <div style={{ display: "flex", gap: "12px", marginTop: "10px", flexWrap: "wrap" }}>
-              {prompt.tags.map((tag) => (
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {scene.composition.map((c) => (
                 <span
-                  key={tag}
+                  key={c}
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "10px",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
                     color: TEXT_MUTED,
+                    border: `1px solid ${BORDER}`,
+                    padding: "3px 10px",
                   }}
                 >
-                  {tag}
+                  {c}
                 </span>
               ))}
             </div>
@@ -518,7 +415,7 @@ function PromptCard({
 
         <div style={{ display: "flex", alignItems: "center", gap: "16px", flexShrink: 0, paddingTop: "8px" }}>
           <div onClick={(e) => e.stopPropagation()}>
-            <CopyButton text={prompt.fullPrompt} label="Copy prompt" />
+            <CopyButton text={scene.prompt} label="Copy prompt" />
           </div>
           <span
             style={{
@@ -537,27 +434,21 @@ function PromptCard({
         </div>
       </div>
 
-      {/* Expanded content */}
+      {/* Expanded */}
       {expanded && (
         <div style={{ paddingBottom: "40px" }}>
-          {/* Image gallery */}
+          {/* Images */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: `repeat(${prompt.images.length}, 1fr)`,
+              gridTemplateColumns: `repeat(${Math.min(scene.images.length, 3)}, 1fr)`,
               gap: "4px",
               marginLeft: "60px",
               marginBottom: "24px",
             }}
           >
-            {prompt.images.map((src, i) => (
-              <div
-                key={i}
-                style={{
-                  height: "200px",
-                  overflow: "hidden",
-                }}
-              >
+            {scene.images.map((src, i) => (
+              <div key={i} style={{ height: "200px", overflow: "hidden" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
@@ -580,85 +471,38 @@ function PromptCard({
             ))}
           </div>
 
-          {/* Full prompt */}
+          {/* Prompt */}
           <div
             style={{
               backgroundColor: BG_SUBTLE,
               padding: "28px 32px",
               marginLeft: "60px",
-              marginBottom: "24px",
             }}
           >
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "10px",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: TEXT_MUTED,
-                display: "block",
-                marginBottom: "14px",
-              }}
-            >
-              Full Prompt
-            </span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: TEXT_MUTED,
+                }}
+              >
+                AI Prompt Template
+              </span>
+            </div>
             <p
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "16px",
-                lineHeight: 1.7,
+                fontSize: "15px",
+                lineHeight: 1.75,
                 color: TEXT_SECONDARY,
-                fontWeight: 400,
+                whiteSpace: "pre-line",
               }}
             >
-              {prompt.fullPrompt}
+              {scene.prompt}
             </p>
-          </div>
-
-          {/* Building blocks */}
-          <div style={{ marginLeft: "60px" }}>
-            {Object.values(prompt.blocks).map((block) => (
-              <div
-                key={block.label}
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "24px",
-                  padding: "16px 0",
-                  borderTop: `1px solid ${BORDER}`,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: TEXT_MUTED,
-                    width: "90px",
-                    flexShrink: 0,
-                    paddingTop: "3px",
-                  }}
-                >
-                  {block.label}
-                </span>
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "15px",
-                    lineHeight: 1.6,
-                    color: TEXT_SECONDARY,
-                    flex: 1,
-                    fontWeight: 400,
-                  }}
-                >
-                  {block.value}
-                </p>
-                <div style={{ flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
-                  <CopyButton text={block.value} />
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       )}
@@ -668,20 +512,21 @@ function PromptCard({
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
+type Tab = "scenes" | "categories" | "dna";
+
 export default function PromptsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"prompts" | "blocks" | "rules">("prompts");
+  const [activeTab, setActiveTab] = useState<Tab>("scenes");
 
-  const tabs: { key: typeof activeTab; label: string }[] = [
-    { key: "prompts", label: "Prompts" },
-    { key: "blocks", label: "Building Blocks" },
-    { key: "rules", label: "Rules" },
+  const tabs: { key: Tab; label: string }[] = [
+    { key: "scenes", label: "12 Scenes" },
+    { key: "categories", label: "Master Prompts" },
+    { key: "dna", label: "Visual DNA" },
   ];
 
   return (
     <div style={{ backgroundColor: BG, minHeight: "100vh", color: TEXT }}>
-
-      {/* ── Navigation ── */}
+      {/* ── Nav ── */}
       <nav
         style={{
           position: "sticky",
@@ -697,15 +542,7 @@ export default function PromptsPage() {
         }}
       >
         <Link href="/" style={{ textDecoration: "none", color: TEXT }}>
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 600,
-              fontSize: "16px",
-              letterSpacing: "-0.01em",
-              color: TEXT,
-            }}
-          >
+          <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "16px" }}>
             bace
           </span>
         </Link>
@@ -735,13 +572,7 @@ export default function PromptsPage() {
 
         <Link
           href="/projects"
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            color: TEXT_MUTED,
-            textDecoration: "none",
-            transition: "color 0.2s ease",
-          }}
+          style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED, textDecoration: "none" }}
         >
           Projects
         </Link>
@@ -766,27 +597,24 @@ export default function PromptsPage() {
             marginBottom: "32px",
           }}
         >
-          We turn ideas into<br />
-          <em style={{ fontStyle: "italic" }}>consistent visuals</em>
+          The visual <em style={{ fontStyle: "italic" }}>system</em>
         </h1>
-
         <p
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "clamp(16px, 1.5vw, 20px)",
             lineHeight: 1.65,
             color: TEXT_SECONDARY,
-            maxWidth: "560px",
+            maxWidth: "600px",
             fontWeight: 400,
           }}
         >
-          Master prompts for generating consistent bace Hub visuals.
-          Every scene follows the same editorial rules &mdash; photorealistic,
-          cinematic, European urban context.
+          12 canonical scenes that define the entire bace visual universe.
+          Every photo, AI image, campaign or social visual is a variation of one of these scenes.
         </p>
       </section>
 
-      {/* ── Stats Bar ── */}
+      {/* ── Stats ── */}
       <section
         style={{
           padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)",
@@ -805,17 +633,17 @@ export default function PromptsPage() {
           }}
         >
           {[
-            { num: String(MASTER_PROMPTS.length), label: "Master scenes" },
-            { num: "6", label: "Building blocks per scene" },
-            { num: String(VISUAL_RULES.length), label: "Visual rules" },
-            { num: "100%", label: "Photorealistic" },
+            { num: "12", label: "Canonical scenes" },
+            { num: "4", label: "Master prompt categories" },
+            { num: "28\u201335mm", label: "Lens language" },
+            { num: "1\u20132m", label: "Camera distance" },
           ].map((stat) => (
             <div key={stat.label}>
               <span
                 style={{
                   fontFamily: "var(--font-display)",
                   fontWeight: 700,
-                  fontSize: "clamp(32px, 4vw, 52px)",
+                  fontSize: "clamp(28px, 3.5vw, 48px)",
                   letterSpacing: "-0.03em",
                   color: TEXT,
                   display: "block",
@@ -825,14 +653,7 @@ export default function PromptsPage() {
               >
                 {stat.num}
               </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  letterSpacing: "0.08em",
-                  color: TEXT_MUTED,
-                }}
-              >
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.08em", color: TEXT_MUTED }}>
                 {stat.label}
               </span>
             </div>
@@ -848,301 +669,33 @@ export default function PromptsPage() {
           padding: "0 clamp(20px, 4vw, 80px) clamp(80px, 10vw, 140px)",
         }}
       >
-        {/* ── TAB: Master Prompts ── */}
-        {activeTab === "prompts" && (
+        {/* ── TAB: 12 Canonical Scenes ── */}
+        {activeTab === "scenes" && (
           <div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                justifyContent: "space-between",
-                marginBottom: "16px",
-              }}
-            >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
               <h2
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: TEXT_MUTED,
-                }}
+                style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: TEXT_MUTED }}
               >
-                All Scenes
+                The 12 Canonical Scenes
               </h2>
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  color: TEXT_MUTED,
-                }}
-              >
-                {MASTER_PROMPTS.length} prompts
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: TEXT_MUTED }}>
+                Every visual = one scene + variation
               </span>
             </div>
 
             <div style={{ borderTop: `1px solid ${BORDER}` }}>
-              {MASTER_PROMPTS.map((prompt, i) => (
-                <PromptCard
-                  key={prompt.id}
-                  prompt={prompt}
-                  index={i}
-                  expanded={expandedId === prompt.id}
-                  onToggle={() =>
-                    setExpandedId(expandedId === prompt.id ? null : prompt.id)
-                  }
+              {CANONICAL_SCENES.map((scene) => (
+                <SceneCard
+                  key={scene.id}
+                  scene={scene}
+                  expanded={expandedId === scene.id}
+                  onToggle={() => setExpandedId(expandedId === scene.id ? null : scene.id)}
                 />
               ))}
             </div>
-          </div>
-        )}
 
-        {/* ── TAB: Building Blocks ── */}
-        {activeTab === "blocks" && (
-          <div>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 500,
-                fontSize: "clamp(28px, 4vw, 44px)",
-                letterSpacing: "-0.02em",
-                color: TEXT,
-                marginBottom: "16px",
-                lineHeight: 1.15,
-              }}
-            >
-              Mix and match <em style={{ fontStyle: "italic" }}>building blocks</em>
-            </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "16px",
-                lineHeight: 1.65,
-                color: TEXT_SECONDARY,
-                maxWidth: "520px",
-                marginBottom: "56px",
-              }}
-            >
-              Copy individual fragments and combine them to create new scenes
-              that stay consistent with the bace visual identity.
-            </p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "56px" }}>
-              {(
-                [
-                  { key: "sceneTypes", label: "Scene Types", num: "01" },
-                  { key: "lightingModes", label: "Lighting Modes", num: "02" },
-                  { key: "atmospheres", label: "Atmospheres", num: "03" },
-                  { key: "styles", label: "Photography Styles", num: "04" },
-                  { key: "cameraSettings", label: "Camera Settings", num: "05" },
-                ] as const
-              ).map((section) => (
-                <div key={section.key}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "baseline",
-                      gap: "16px",
-                      marginBottom: "20px",
-                      paddingBottom: "12px",
-                      borderBottom: `1px solid ${BORDER}`,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "11px",
-                        color: TEXT_MUTED,
-                      }}
-                    >
-                      {section.num}
-                    </span>
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 600,
-                        fontSize: "18px",
-                        letterSpacing: "-0.01em",
-                        color: TEXT,
-                      }}
-                    >
-                      {section.label}
-                    </h3>
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-                    {STYLE_BUILDING_BLOCKS[section.key].map((item, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "24px",
-                          padding: "16px 0",
-                          borderBottom: `1px solid ${BORDER}`,
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontFamily: "var(--font-display)",
-                            fontSize: "15px",
-                            lineHeight: 1.55,
-                            color: TEXT_SECONDARY,
-                            flex: 1,
-                          }}
-                        >
-                          {item}
-                        </p>
-                        <CopyButton text={item} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              {/* Formula block */}
-              <div
-                style={{
-                  backgroundColor: DARK,
-                  padding: "clamp(32px, 4vw, 56px)",
-                }}
-              >
-                <h3
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 500,
-                    fontSize: "clamp(24px, 3vw, 36px)",
-                    letterSpacing: "-0.02em",
-                    color: BG,
-                    marginBottom: "20px",
-                    lineHeight: 1.15,
-                  }}
-                >
-                  Build your <em style={{ fontStyle: "italic" }}>own</em>
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "15px",
-                    lineHeight: 1.7,
-                    color: "rgba(255,255,255,0.5)",
-                    marginBottom: "28px",
-                    maxWidth: "520px",
-                  }}
-                >
-                  Combine one block from each category. The formula always stays the same.
-                </p>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "13px",
-                    lineHeight: 2.2,
-                    color: "rgba(255,255,255,0.35)",
-                    borderLeft: "2px solid rgba(255,255,255,0.15)",
-                    paddingLeft: "20px",
-                  }}
-                >
-                  [Scene Type] showing [Subject with bace Hub] at [time].<br />
-                  [Lighting Mode].<br />
-                  [Atmosphere].<br />
-                  [Photography Style].
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── TAB: Visual Rules ── */}
-        {activeTab === "rules" && (
-          <div>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 500,
-                fontSize: "clamp(28px, 4vw, 44px)",
-                letterSpacing: "-0.02em",
-                color: TEXT,
-                marginBottom: "16px",
-                lineHeight: 1.15,
-              }}
-            >
-              The <em style={{ fontStyle: "italic" }}>rules</em> we never break
-            </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "16px",
-                lineHeight: 1.65,
-                color: TEXT_SECONDARY,
-                maxWidth: "520px",
-                marginBottom: "56px",
-              }}
-            >
-              Eight non-negotiable rules that keep every bace Hub
-              visual consistent, regardless of scene or mood.
-            </p>
-
-            <div style={{ borderTop: `1px solid ${BORDER}` }}>
-              {VISUAL_RULES.map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "32px",
-                    padding: "28px 0",
-                    borderBottom: `1px solid ${BORDER}`,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "12px",
-                      color: TEXT_MUTED,
-                      width: "28px",
-                      flexShrink: 0,
-                      paddingTop: "3px",
-                    }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div style={{ flex: 1 }}>
-                    <h4
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 600,
-                        fontSize: "18px",
-                        letterSpacing: "-0.01em",
-                        color: TEXT,
-                        marginBottom: "6px",
-                      }}
-                    >
-                      {item.rule}
-                    </h4>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "15px",
-                        color: TEXT_SECONDARY,
-                        lineHeight: 1.55,
-                      }}
-                    >
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Negative prompts */}
-            <div
-              style={{
-                backgroundColor: DARK,
-                padding: "clamp(32px, 4vw, 56px)",
-                marginTop: "56px",
-              }}
-            >
+            {/* Variation rule */}
+            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -1150,11 +703,154 @@ export default function PromptsPage() {
                   fontSize: "clamp(24px, 3vw, 36px)",
                   letterSpacing: "-0.02em",
                   color: BG,
-                  marginBottom: "8px",
+                  marginBottom: "20px",
                   lineHeight: 1.15,
                 }}
               >
-                Always <em style={{ fontStyle: "italic" }}>avoid</em>
+                The key <em style={{ fontStyle: "italic" }}>rule</em>
+              </h3>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "16px",
+                  lineHeight: 1.7,
+                  color: "rgba(255,255,255,0.55)",
+                  maxWidth: "560px",
+                  marginBottom: "28px",
+                }}
+              >
+                Every new visual should be one of these scenes + a variation.
+                Vary the city, people, weather, or time of day &mdash; but the core scene stays recognizable.
+              </p>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, 1fr)",
+                  gap: "1px",
+                  backgroundColor: "rgba(255,255,255,0.08)",
+                }}
+              >
+                {["Different cities", "Different people", "Different weather", "Different time of day"].map((v) => (
+                  <div
+                    key={v}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "12px",
+                      color: "rgba(255,255,255,0.4)",
+                      padding: "16px 20px",
+                      backgroundColor: DARK,
+                    }}
+                  >
+                    {v}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB: Master Prompt Categories ── */}
+        {activeTab === "categories" && (
+          <div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 500,
+                fontSize: "clamp(28px, 4vw, 44px)",
+                letterSpacing: "-0.02em",
+                color: TEXT,
+                marginBottom: "16px",
+                lineHeight: 1.15,
+              }}
+            >
+              Four master <em style={{ fontStyle: "italic" }}>categories</em>
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "16px",
+                lineHeight: 1.65,
+                color: TEXT_SECONDARY,
+                maxWidth: "560px",
+                marginBottom: "56px",
+              }}
+            >
+              Each category serves a different purpose. Pick the right one
+              for your use case, then customize with scene-specific details.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "0", borderTop: `1px solid ${BORDER}` }}>
+              {MASTER_CATEGORIES.map((cat, i) => (
+                <div
+                  key={cat.id}
+                  style={{ borderBottom: `1px solid ${BORDER}`, padding: "40px 0" }}
+                >
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "32px", marginBottom: "24px" }}>
+                    <span
+                      style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED, paddingTop: "6px", width: "28px", flexShrink: 0 }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div style={{ flex: 1 }}>
+                      <h3
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontWeight: 500,
+                          fontSize: "clamp(22px, 2.5vw, 32px)",
+                          letterSpacing: "-0.02em",
+                          color: TEXT,
+                          lineHeight: 1.15,
+                          marginBottom: "8px",
+                        }}
+                      >
+                        {cat.title} <em style={{ fontStyle: "italic" }}>{cat.titleAccent}</em>
+                      </h3>
+                      <p style={{ fontFamily: "var(--font-display)", fontSize: "15px", color: TEXT_SECONDARY, lineHeight: 1.55 }}>
+                        {cat.purpose}
+                      </p>
+                    </div>
+                    <div style={{ flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
+                      <CopyButton text={cat.prompt} label="Copy prompt" />
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      backgroundColor: BG_SUBTLE,
+                      padding: "24px 28px",
+                      marginLeft: "60px",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "14px",
+                        lineHeight: 1.75,
+                        color: TEXT_SECONDARY,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {cat.prompt}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Energy boost */}
+            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 500,
+                  fontSize: "clamp(20px, 2.5vw, 28px)",
+                  letterSpacing: "-0.02em",
+                  color: BG,
+                  marginBottom: "12px",
+                  lineHeight: 1.15,
+                }}
+              >
+                Energy <em style={{ fontStyle: "italic" }}>boost</em>
               </h3>
               <p
                 style={{
@@ -1162,62 +858,243 @@ export default function PromptsPage() {
                   fontSize: "15px",
                   lineHeight: 1.65,
                   color: "rgba(255,255,255,0.45)",
-                  marginBottom: "32px",
-                  maxWidth: "480px",
+                  marginBottom: "20px",
+                  maxWidth: "520px",
                 }}
               >
-                Include these as negative prompts to keep generations on-brand.
+                Add this line to any prompt to prevent the &ldquo;corporate stock photo&rdquo; look:
               </p>
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-                  gap: "1px",
-                  backgroundColor: "rgba(255,255,255,0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "16px",
+                  backgroundColor: "rgba(255,255,255,0.05)",
+                  padding: "16px 20px",
                 }}
               >
-                {NEGATIVE_PROMPTS.map((item, i) => (
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "13px",
+                    color: "rgba(255,255,255,0.6)",
+                    fontStyle: "italic",
+                  }}
+                >
+                  {ENERGY_BOOST}
+                </p>
+                <CopyButton text={ENERGY_BOOST} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB: Visual DNA ── */}
+        {activeTab === "dna" && (
+          <div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 500,
+                fontSize: "clamp(28px, 4vw, 44px)",
+                letterSpacing: "-0.02em",
+                color: TEXT,
+                marginBottom: "16px",
+                lineHeight: 1.15,
+              }}
+            >
+              The bace <em style={{ fontStyle: "italic" }}>Visual DNA</em>
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "16px",
+                lineHeight: 1.65,
+                color: TEXT_SECONDARY,
+                maxWidth: "600px",
+                marginBottom: "56px",
+              }}
+            >
+              This block must be included in every prompt. It encodes the core
+              visual language calibrated from the bace moodboard &mdash; not generic stock, but
+              editorial lifestyle + street documentary + commercial product storytelling.
+            </p>
+
+            {/* DNA Block */}
+            <div style={{ marginBottom: "48px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingBottom: "12px",
+                  borderBottom: `1px solid ${BORDER}`,
+                  marginBottom: "20px",
+                }}
+              >
+                <span
+                  style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: TEXT_MUTED }}
+                >
+                  Core DNA Block
+                </span>
+                <CopyButton text={VISUAL_DNA} label="Copy DNA block" />
+              </div>
+              <div style={{ backgroundColor: BG_SUBTLE, padding: "32px" }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "15px",
+                    lineHeight: 1.8,
+                    color: TEXT_SECONDARY,
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {VISUAL_DNA}
+                </p>
+              </div>
+            </div>
+
+            {/* Key Characteristics */}
+            <div style={{ marginBottom: "48px" }}>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                  color: TEXT,
+                  marginBottom: "20px",
+                  paddingBottom: "12px",
+                  borderBottom: `1px solid ${BORDER}`,
+                }}
+              >
+                Key characteristics
+              </h3>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0" }}>
+                {VISUAL_CHARACTERISTICS.map((c, i) => (
                   <div
-                    key={i}
+                    key={c}
                     style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "12px",
-                      color: "rgba(255,255,255,0.45)",
-                      padding: "16px 20px",
-                      backgroundColor: DARK,
-                      lineHeight: 1.5,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "16px",
+                      padding: "16px 0",
+                      borderBottom: `1px solid ${BORDER}`,
                     }}
                   >
-                    {item}
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED, width: "24px", flexShrink: 0 }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "15px", color: TEXT }}>
+                      {c}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Copy all rules */}
-            <div style={{ marginTop: "32px" }}>
-              <CopyButton
-                text={[
-                  "bace Hub Visual Rules:",
-                  "",
-                  ...VISUAL_RULES.map((r, i) => `${i + 1}. ${r.rule} \u2014 ${r.desc}`),
-                  "",
-                  "Always avoid: " + NEGATIVE_PROMPTS.join(", ") + ".",
-                ].join("\n")}
-                label="Copy all rules"
-              />
+            {/* Hidden Rule */}
+            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginBottom: "48px" }}>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 500,
+                  fontSize: "clamp(20px, 2.5vw, 28px)",
+                  color: BG,
+                  marginBottom: "8px",
+                  lineHeight: 1.15,
+                }}
+              >
+                The hidden <em style={{ fontStyle: "italic" }}>rule</em>
+              </h3>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "15px",
+                  lineHeight: 1.65,
+                  color: "rgba(255,255,255,0.45)",
+                  marginBottom: "24px",
+                  maxWidth: "520px",
+                }}
+              >
+                Most images that feel alive contain one of these three elements.
+                If prompts don&apos;t include action, the images feel dead.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1px", marginBottom: "28px" }}>
+                {HIDDEN_RULE_ELEMENTS.map((el) => (
+                  <div
+                    key={el}
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      color: BG,
+                      padding: "14px 0",
+                      borderBottom: "1px solid rgba(255,255,255,0.1)",
+                    }}
+                  >
+                    {el}
+                  </div>
+                ))}
+              </div>
+
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.3)",
+                  marginBottom: "14px",
+                }}
+              >
+                Always include a verb
+              </p>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {ACTION_VERBS.map((v) => (
+                  <span
+                    key={v}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "12px",
+                      color: "rgba(255,255,255,0.5)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      padding: "6px 14px",
+                    }}
+                  >
+                    {v}
+                  </span>
+                ))}
+              </div>
             </div>
+
+            {/* Copy all */}
+            <CopyButton
+              text={[
+                "BACE VISUAL DNA (MOODBOARD CALIBRATED)",
+                "",
+                VISUAL_DNA,
+                "",
+                "ENERGY BOOST LINE:",
+                ENERGY_BOOST,
+                "",
+                "KEY CHARACTERISTICS:",
+                ...VISUAL_CHARACTERISTICS.map((c, i) => `${i + 1}. ${c}`),
+                "",
+                "HIDDEN RULE \u2014 Every image must contain:",
+                ...HIDDEN_RULE_ELEMENTS.map((e) => `\u2022 ${e}`),
+                "",
+                "ALWAYS INCLUDE A VERB:",
+                ACTION_VERBS.join(", "),
+              ].join("\n")}
+              label="Copy entire Visual DNA"
+            />
           </div>
         )}
       </main>
 
       {/* ── Footer ── */}
-      <footer
-        style={{
-          backgroundColor: DARK,
-          padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)",
-        }}
-      >
+      <footer style={{ backgroundColor: DARK, padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)" }}>
         <div
           style={{
             maxWidth: "1280px",
@@ -1230,30 +1107,13 @@ export default function PromptsPage() {
           }}
         >
           <div>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 600,
-                fontSize: "16px",
-                color: BG,
-                display: "block",
-                marginBottom: "12px",
-              }}
-            >
+            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "16px", color: BG, display: "block", marginBottom: "12px" }}>
               bace
             </span>
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                color: "rgba(255,255,255,0.35)",
-                lineHeight: 1.7,
-              }}
-            >
-              Consistent visual identity system
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.35)", lineHeight: 1.7 }}>
+              Visual system &mdash; moodboard calibrated
             </span>
           </div>
-
           <div style={{ display: "flex", gap: "48px" }}>
             {[
               { label: "Prompts", href: "/prompts" },
@@ -1262,26 +1122,13 @@ export default function PromptsPage() {
               <Link
                 key={link.label}
                 href={link.href}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "12px",
-                  color: "rgba(255,255,255,0.45)",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                }}
+                style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
               >
                 {link.label}
               </Link>
             ))}
           </div>
-
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              color: "rgba(255,255,255,0.25)",
-            }}
-          >
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.25)" }}>
             2026
           </span>
         </div>
