@@ -13,6 +13,22 @@ const DARK = "#111111";
 const NEON_GREEN = "#C8E632";
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ─── Mobile hook ─────────────────────────────────────────────────────────────
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [breakpoint]);
+
+  return isMobile;
+}
+
 // ─── Visual DNA ──────────────────────────────────────────────────────────────
 
 const VISUAL_DNA = `Photorealistic editorial lifestyle photography in a vibrant urban environment.
@@ -453,10 +469,12 @@ function SceneCard({
   scene,
   expanded,
   onToggle,
+  isMobile,
 }: {
   scene: CanonicalScene;
   expanded: boolean;
   onToggle: () => void;
+  isMobile: boolean;
 }) {
   return (
     <div data-reveal style={{ borderBottom: `1px solid ${BORDER}` }}>
@@ -464,22 +482,32 @@ function SceneCard({
       <div
         onClick={onToggle}
         style={{
-          padding: "32px 0",
+          padding: isMobile ? "20px 0" : "32px 0",
           cursor: "pointer",
           display: "flex",
-          alignItems: "flex-start",
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: isMobile ? "stretch" : "flex-start",
           justifyContent: "space-between",
-          gap: "24px",
+          gap: isMobile ? "12px" : "24px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "flex-start", gap: "32px", flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: isMobile ? "12px" : "32px",
+            flex: 1,
+            minWidth: 0,
+            flexWrap: isMobile ? "wrap" : "nowrap",
+          }}
+        >
           <span
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "12px",
               color: TEXT_MUTED,
               letterSpacing: "0.05em",
-              paddingTop: "8px",
+              paddingTop: isMobile ? "2px" : "8px",
               flexShrink: 0,
               width: "28px",
             }}
@@ -487,49 +515,51 @@ function SceneCard({
             {scene.num}
           </span>
 
-          {/* Thumbnails */}
-          <div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
-            {scene.images.slice(0, 3).map((src, i) => (
-              <div
-                key={i}
-                style={{
-                  width: i === 0 ? "120px" : "60px",
-                  height: "80px",
-                  overflow: "hidden",
-                  flexShrink: 0,
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src}
-                  alt=""
+          {/* Thumbnails — hide on mobile collapsed, show 1 thumbnail */}
+          {!isMobile && (
+            <div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
+              {scene.images.slice(0, 3).map((src, i) => (
+                <div
+                  key={i}
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                    filter: "saturate(0.85)",
-                    transition: "filter 0.3s ease, transform 0.3s ease",
+                    width: i === 0 ? "120px" : "60px",
+                    height: "80px",
+                    overflow: "hidden",
+                    flexShrink: 0,
                   }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.filter = "saturate(1)";
-                    (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.filter = "saturate(0.85)";
-                    (e.currentTarget as HTMLImageElement).style.transform = "scale(1)";
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt=""
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                      filter: "saturate(0.85)",
+                      transition: "filter 0.3s ease, transform 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.filter = "saturate(1)";
+                      (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.filter = "saturate(0.85)";
+                      (e.currentTarget as HTMLImageElement).style.transform = "scale(1)";
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
-          <div style={{ minWidth: 0 }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
             <h3
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 500,
-                fontSize: "clamp(22px, 2.5vw, 32px)",
+                fontSize: isMobile ? "18px" : "clamp(22px, 2.5vw, 32px)",
                 letterSpacing: "-0.02em",
                 color: TEXT,
                 lineHeight: 1.15,
@@ -541,7 +571,7 @@ function SceneCard({
             <p
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "14px",
+                fontSize: isMobile ? "13px" : "14px",
                 color: TEXT_SECONDARY,
                 lineHeight: 1.5,
                 marginBottom: "10px",
@@ -549,27 +579,38 @@ function SceneCard({
             >
               {scene.story}
             </p>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              {scene.composition.map((c) => (
-                <span
-                  key={c}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
-                    letterSpacing: "0.08em",
-                    color: TEXT_MUTED,
-                    border: `1px solid ${BORDER}`,
-                    padding: "3px 10px",
-                  }}
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
+            {!isMobile && (
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {scene.composition.map((c) => (
+                  <span
+                    key={c}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "10px",
+                      letterSpacing: "0.08em",
+                      color: TEXT_MUTED,
+                      border: `1px solid ${BORDER}`,
+                      padding: "3px 10px",
+                    }}
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "16px", flexShrink: 0, paddingTop: "8px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: isMobile ? "12px" : "16px",
+            flexShrink: 0,
+            paddingTop: isMobile ? "0" : "8px",
+            justifyContent: isMobile ? "flex-end" : "flex-start",
+          }}
+        >
           <div onClick={(e) => e.stopPropagation()}>
             <CopyButton text={scene.prompt} label="Copy prompt" />
           </div>
@@ -592,19 +633,21 @@ function SceneCard({
 
       {/* Expanded */}
       {expanded && (
-        <div style={{ paddingBottom: "40px" }}>
+        <div style={{ paddingBottom: isMobile ? "24px" : "40px" }}>
           {/* Images */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: `repeat(${Math.min(scene.images.length, 3)}, 1fr)`,
+              gridTemplateColumns: isMobile
+                ? scene.images.length === 1 ? "1fr" : "1fr 1fr"
+                : `repeat(${Math.min(scene.images.length, 3)}, 1fr)`,
               gap: "4px",
-              marginLeft: "60px",
+              marginLeft: isMobile ? "0" : "60px",
               marginBottom: "24px",
             }}
           >
             {scene.images.map((src, i) => (
-              <div key={i} style={{ height: "200px", overflow: "hidden" }}>
+              <div key={i} style={{ height: isMobile ? "160px" : "200px", overflow: "hidden" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
@@ -631,8 +674,8 @@ function SceneCard({
           <div
             style={{
               backgroundColor: BG_SUBTLE,
-              padding: "28px 32px",
-              marginLeft: "60px",
+              padding: isMobile ? "20px 16px" : "28px 32px",
+              marginLeft: isMobile ? "0" : "60px",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
@@ -651,7 +694,7 @@ function SceneCard({
             <p
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "15px",
+                fontSize: isMobile ? "13px" : "15px",
                 lineHeight: 1.75,
                 color: TEXT_SECONDARY,
                 whiteSpace: "pre-line",
@@ -673,8 +716,8 @@ type Tab = "scenes" | "categories" | "dna" | "hardware";
 export default function PromptsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("scenes");
-
   const [expandedHub, setExpandedHub] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const tabs: { key: Tab; label: string }[] = [
     { key: "scenes", label: "12 Scenes" },
@@ -766,6 +809,9 @@ export default function PromptsPage() {
 
   const currentHero = heroImages[activeTab];
 
+  // Shared indent for expanded content
+  const indent = isMobile ? "0" : "60px";
+
   return (
     <div style={{ backgroundColor: BG, minHeight: "100vh", color: TEXT }}>
       {/* ── Nav ── */}
@@ -780,16 +826,17 @@ export default function PromptsPage() {
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
           borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-          padding: "0 clamp(20px, 4vw, 80px)",
-          height: "64px",
+          padding: isMobile ? "0 16px" : "0 clamp(20px, 4vw, 80px)",
+          height: isMobile ? "56px" : "64px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: isMobile ? "8px" : "0",
         }}
       >
         <button
           onClick={() => { setActiveTab("scenes"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", transition: "filter 0.2s ease" }}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", transition: "filter 0.2s ease", flexShrink: 0 }}
           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = `drop-shadow(0 0 8px ${NEON_GREEN})`; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = "none"; }}
         >
@@ -797,27 +844,39 @@ export default function PromptsPage() {
           <img
             src="/images/bace/brand/bace-logo.png"
             alt="bace"
-            style={{ height: "40px", width: "auto", display: "block" }}
+            style={{ height: isMobile ? "28px" : "40px", width: "auto", display: "block" }}
           />
         </button>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: isMobile ? "6px" : "32px",
+            overflow: "auto",
+            WebkitOverflowScrolling: "touch",
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
           {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "13px",
+                fontSize: isMobile ? "11px" : "13px",
                 fontWeight: 700,
                 letterSpacing: "0.04em",
                 color: activeTab === tab.key ? TEXT : "rgba(0,0,0,0.5)",
                 backgroundColor: "transparent",
                 border: "none",
                 cursor: "pointer",
-                padding: "4px 0",
+                padding: isMobile ? "4px 6px" : "4px 0",
                 borderBottom: activeTab === tab.key ? `2px solid ${NEON_GREEN}` : "2px solid transparent",
                 transition: "color 0.25s ease, border-color 0.25s ease, text-shadow 0.25s ease",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
               }}
               onMouseEnter={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
@@ -835,7 +894,7 @@ export default function PromptsPage() {
           ))}
         </div>
 
-        <span style={{ width: "60px" }} />
+        {!isMobile && <span style={{ width: "60px" }} />}
       </nav>
 
       {/* ── Hero ── */}
@@ -843,7 +902,7 @@ export default function PromptsPage() {
         ref={heroRef}
         style={{
           position: "relative",
-          height: "100vh",
+          height: isMobile ? "70vh" : "100vh",
           display: "flex",
           alignItems: "flex-end",
           overflow: "hidden",
@@ -888,7 +947,7 @@ export default function PromptsPage() {
           style={{
             position: "relative",
             zIndex: 1,
-            padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)",
+            padding: isMobile ? "32px 20px" : "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)",
             maxWidth: "1280px",
             margin: "0 auto",
             width: "100%",
@@ -899,11 +958,11 @@ export default function PromptsPage() {
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 500,
-              fontSize: "clamp(40px, 7vw, 88px)",
+              fontSize: isMobile ? "36px" : "clamp(40px, 7vw, 88px)",
               letterSpacing: "-0.03em",
               lineHeight: 1.05,
               color: "#ffffff",
-              marginBottom: "20px",
+              marginBottom: isMobile ? "12px" : "20px",
             }}
           >
             {currentHero.title} <em style={{ fontStyle: "italic" }}>{heroAccents[activeTab]}</em>
@@ -911,7 +970,7 @@ export default function PromptsPage() {
           <p
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(16px, 1.5vw, 20px)",
+              fontSize: isMobile ? "14px" : "clamp(16px, 1.5vw, 20px)",
               lineHeight: 1.65,
               color: "rgba(255,255,255,0.7)",
               maxWidth: "560px",
@@ -929,13 +988,25 @@ export default function PromptsPage() {
         style={{
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "clamp(60px, 8vw, 100px) clamp(20px, 4vw, 80px) clamp(80px, 10vw, 140px)",
+          padding: isMobile
+            ? "40px 16px 60px"
+            : "clamp(60px, 8vw, 100px) clamp(20px, 4vw, 80px) clamp(80px, 10vw, 140px)",
         }}
       >
         {/* ── TAB: 12 Canonical Scenes ── */}
         {activeTab === "scenes" && (
           <div>
-            <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
+            <div
+              data-reveal
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "baseline",
+                marginBottom: "16px",
+                flexWrap: "wrap",
+                gap: "4px",
+              }}
+            >
               <h2
                 style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: TEXT_MUTED }}
               >
@@ -953,12 +1024,13 @@ export default function PromptsPage() {
                   scene={scene}
                   expanded={expandedId === scene.id}
                   onToggle={() => setExpandedId(expandedId === scene.id ? null : scene.id)}
+                  isMobile={isMobile}
                 />
               ))}
             </div>
 
             {/* Variation rule */}
-            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: isMobile ? "24px 16px" : "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -975,7 +1047,7 @@ export default function PromptsPage() {
               <p
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: 1.7,
                   color: "rgba(255,255,255,0.55)",
                   maxWidth: "560px",
@@ -988,7 +1060,7 @@ export default function PromptsPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
+                  gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
                   gap: "1px",
                   backgroundColor: "rgba(255,255,255,0.08)",
                 }}
@@ -998,9 +1070,9 @@ export default function PromptsPage() {
                     key={v}
                     style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: "12px",
+                      fontSize: isMobile ? "11px" : "12px",
                       color: "rgba(255,255,255,0.4)",
-                      padding: "16px 20px",
+                      padding: isMobile ? "12px 14px" : "16px 20px",
                       backgroundColor: DARK,
                     }}
                   >
@@ -1033,11 +1105,11 @@ export default function PromptsPage() {
               data-reveal
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "16px",
+                fontSize: isMobile ? "14px" : "16px",
                 lineHeight: 1.65,
                 color: TEXT_SECONDARY,
                 maxWidth: "560px",
-                marginBottom: "56px",
+                marginBottom: isMobile ? "32px" : "56px",
               }}
             >
               Each category serves a different purpose. Pick the right one
@@ -1049,33 +1121,49 @@ export default function PromptsPage() {
                 <div
                   data-reveal
                   key={cat.id}
-                  style={{ borderBottom: `1px solid ${BORDER}`, padding: "40px 0" }}
+                  style={{ borderBottom: `1px solid ${BORDER}`, padding: isMobile ? "24px 0" : "40px 0" }}
                 >
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: "32px", marginBottom: "24px" }}>
-                    <span
-                      style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED, paddingTop: "6px", width: "28px", flexShrink: 0 }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div style={{ flex: 1 }}>
-                      <h3
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontWeight: 500,
-                          fontSize: "clamp(22px, 2.5vw, 32px)",
-                          letterSpacing: "-0.02em",
-                          color: TEXT,
-                          lineHeight: 1.15,
-                          marginBottom: "8px",
-                        }}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: isMobile ? "column" : "row",
+                      alignItems: isMobile ? "stretch" : "flex-start",
+                      gap: isMobile ? "12px" : "32px",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    {!isMobile && (
+                      <span
+                        style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED, paddingTop: "6px", width: "28px", flexShrink: 0 }}
                       >
-                        {cat.title} <em style={{ fontStyle: "italic" }}>{cat.titleAccent}</em>
-                      </h3>
-                      <p style={{ fontFamily: "var(--font-display)", fontSize: "15px", color: TEXT_SECONDARY, lineHeight: 1.55 }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    )}
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", alignItems: "baseline", gap: "8px", marginBottom: "8px" }}>
+                        {isMobile && (
+                          <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED }}>
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                        )}
+                        <h3
+                          style={{
+                            fontFamily: "var(--font-display)",
+                            fontWeight: 500,
+                            fontSize: isMobile ? "20px" : "clamp(22px, 2.5vw, 32px)",
+                            letterSpacing: "-0.02em",
+                            color: TEXT,
+                            lineHeight: 1.15,
+                          }}
+                        >
+                          {cat.title} <em style={{ fontStyle: "italic" }}>{cat.titleAccent}</em>
+                        </h3>
+                      </div>
+                      <p style={{ fontFamily: "var(--font-display)", fontSize: isMobile ? "13px" : "15px", color: TEXT_SECONDARY, lineHeight: 1.55 }}>
                         {cat.purpose}
                       </p>
                     </div>
-                    <div style={{ flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
+                    <div style={{ flexShrink: 0, alignSelf: isMobile ? "flex-end" : "flex-start" }} onClick={(e) => e.stopPropagation()}>
                       <CopyButton text={cat.prompt} label="Copy prompt" />
                     </div>
                   </div>
@@ -1083,14 +1171,14 @@ export default function PromptsPage() {
                   <div
                     style={{
                       backgroundColor: BG_SUBTLE,
-                      padding: "24px 28px",
-                      marginLeft: "60px",
+                      padding: isMobile ? "16px" : "24px 28px",
+                      marginLeft: indent,
                     }}
                   >
                     <p
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "14px",
+                        fontSize: isMobile ? "13px" : "14px",
                         lineHeight: 1.75,
                         color: TEXT_SECONDARY,
                         whiteSpace: "pre-line",
@@ -1104,7 +1192,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Energy boost */}
-            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: isMobile ? "24px 16px" : "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -1121,7 +1209,7 @@ export default function PromptsPage() {
               <p
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "15px",
+                  fontSize: isMobile ? "13px" : "15px",
                   lineHeight: 1.65,
                   color: "rgba(255,255,255,0.45)",
                   marginBottom: "20px",
@@ -1133,17 +1221,18 @@ export default function PromptsPage() {
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
+                  flexDirection: isMobile ? "column" : "row",
+                  alignItems: isMobile ? "flex-start" : "center",
                   justifyContent: "space-between",
-                  gap: "16px",
+                  gap: isMobile ? "12px" : "16px",
                   backgroundColor: "rgba(255,255,255,0.05)",
-                  padding: "16px 20px",
+                  padding: isMobile ? "14px" : "16px 20px",
                 }}
               >
                 <p
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "13px",
+                    fontSize: isMobile ? "12px" : "13px",
                     color: "rgba(255,255,255,0.6)",
                     fontStyle: "italic",
                   }}
@@ -1177,11 +1266,11 @@ export default function PromptsPage() {
               data-reveal
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "16px",
+                fontSize: isMobile ? "14px" : "16px",
                 lineHeight: 1.65,
                 color: TEXT_SECONDARY,
                 maxWidth: "600px",
-                marginBottom: "56px",
+                marginBottom: isMobile ? "32px" : "56px",
               }}
             >
               This block must be included in every prompt. It encodes the core
@@ -1199,6 +1288,8 @@ export default function PromptsPage() {
                   paddingBottom: "12px",
                   borderBottom: `1px solid ${BORDER}`,
                   marginBottom: "20px",
+                  flexWrap: "wrap",
+                  gap: "8px",
                 }}
               >
                 <span
@@ -1208,11 +1299,11 @@ export default function PromptsPage() {
                 </span>
                 <CopyButton text={VISUAL_DNA} label="Copy DNA block" />
               </div>
-              <div style={{ backgroundColor: BG_SUBTLE, padding: "32px" }}>
+              <div style={{ backgroundColor: BG_SUBTLE, padding: isMobile ? "20px 16px" : "32px" }}>
                 <p
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "15px",
+                    fontSize: isMobile ? "13px" : "15px",
                     lineHeight: 1.8,
                     color: TEXT_SECONDARY,
                     whiteSpace: "pre-line",
@@ -1238,7 +1329,7 @@ export default function PromptsPage() {
               >
                 Key characteristics
               </h3>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0" }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: "0" }}>
                 {VISUAL_CHARACTERISTICS.map((c, i) => (
                   <div
                     key={c}
@@ -1246,14 +1337,14 @@ export default function PromptsPage() {
                       display: "flex",
                       alignItems: "center",
                       gap: "16px",
-                      padding: "16px 0",
+                      padding: isMobile ? "12px 0" : "16px 0",
                       borderBottom: `1px solid ${BORDER}`,
                     }}
                   >
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED, width: "24px", flexShrink: 0 }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span style={{ fontFamily: "var(--font-display)", fontSize: "15px", color: TEXT }}>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: isMobile ? "14px" : "15px", color: TEXT }}>
                       {c}
                     </span>
                   </div>
@@ -1262,7 +1353,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Hidden Rule */}
-            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginBottom: "48px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: isMobile ? "24px 16px" : "clamp(32px, 4vw, 56px)", marginBottom: "48px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -1278,7 +1369,7 @@ export default function PromptsPage() {
               <p
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "15px",
+                  fontSize: isMobile ? "13px" : "15px",
                   lineHeight: 1.65,
                   color: "rgba(255,255,255,0.45)",
                   marginBottom: "24px",
@@ -1294,7 +1385,7 @@ export default function PromptsPage() {
                     key={el}
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontSize: "16px",
+                      fontSize: isMobile ? "14px" : "16px",
                       fontWeight: 500,
                       color: BG,
                       padding: "14px 0",
@@ -1324,7 +1415,7 @@ export default function PromptsPage() {
                     key={v}
                     style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: "12px",
+                      fontSize: isMobile ? "11px" : "12px",
                       color: "rgba(255,255,255,0.5)",
                       border: "1px solid rgba(255,255,255,0.12)",
                       padding: "6px 14px",
@@ -1381,11 +1472,11 @@ export default function PromptsPage() {
               data-reveal
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "16px",
+                fontSize: isMobile ? "14px" : "16px",
                 lineHeight: 1.65,
                 color: TEXT_SECONDARY,
                 maxWidth: "600px",
-                marginBottom: "56px",
+                marginBottom: isMobile ? "32px" : "56px",
               }}
             >
               The bace Hub product lineup. Use these references to ensure AI-generated
@@ -1398,15 +1489,15 @@ export default function PromptsPage() {
               data-reveal
               style={{
                 backgroundColor: BG_SUBTLE,
-                padding: "20px 24px",
-                marginBottom: "48px",
+                padding: isMobile ? "16px" : "20px 24px",
+                marginBottom: isMobile ? "32px" : "48px",
                 borderLeft: `3px solid ${TEXT}`,
               }}
             >
               <p
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "12px",
+                  fontSize: isMobile ? "11px" : "12px",
                   letterSpacing: "0.04em",
                   color: TEXT,
                   lineHeight: 1.7,
@@ -1427,24 +1518,34 @@ export default function PromptsPage() {
                     <div
                       onClick={() => setExpandedHub(isExpanded ? null : hub.id)}
                       style={{
-                        padding: "32px 0",
+                        padding: isMobile ? "20px 0" : "32px 0",
                         cursor: "pointer",
                         display: "flex",
-                        alignItems: "flex-start",
+                        flexDirection: isMobile ? "column" : "row",
+                        alignItems: isMobile ? "stretch" : "flex-start",
                         justifyContent: "space-between",
-                        gap: "24px",
+                        gap: isMobile ? "12px" : "24px",
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "flex-start", gap: "32px", flex: 1, minWidth: 0 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          gap: isMobile ? "12px" : "32px",
+                          flex: 1,
+                          minWidth: 0,
+                          flexWrap: isMobile ? "wrap" : "nowrap",
+                        }}
+                      >
                         {/* Thumbnail or placeholder */}
                         <div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
                           {hub.images.length > 0 ? (
-                            hub.images.slice(0, 2).map((src, i) => (
+                            hub.images.slice(0, isMobile ? 1 : 2).map((src, i) => (
                               <div
                                 key={i}
                                 style={{
-                                  width: i === 0 ? "120px" : "80px",
-                                  height: "80px",
+                                  width: isMobile ? "80px" : (i === 0 ? "120px" : "80px"),
+                                  height: isMobile ? "60px" : "80px",
                                   overflow: "hidden",
                                   flexShrink: 0,
                                 }}
@@ -1465,8 +1566,8 @@ export default function PromptsPage() {
                           ) : (
                             <div
                               style={{
-                                width: "120px",
-                                height: "80px",
+                                width: isMobile ? "80px" : "120px",
+                                height: isMobile ? "60px" : "80px",
                                 backgroundColor: BG_SUBTLE,
                                 border: `1px solid ${BORDER}`,
                                 display: "flex",
@@ -1481,12 +1582,12 @@ export default function PromptsPage() {
                           )}
                         </div>
 
-                        <div style={{ minWidth: 0 }}>
+                        <div style={{ minWidth: 0, flex: 1 }}>
                           <h3
                             style={{
                               fontFamily: "var(--font-display)",
                               fontWeight: 500,
-                              fontSize: "clamp(22px, 2.5vw, 32px)",
+                              fontSize: isMobile ? "18px" : "clamp(22px, 2.5vw, 32px)",
                               letterSpacing: "-0.02em",
                               color: TEXT,
                               lineHeight: 1.15,
@@ -1498,7 +1599,7 @@ export default function PromptsPage() {
                           <p
                             style={{
                               fontFamily: "var(--font-display)",
-                              fontSize: "14px",
+                              fontSize: isMobile ? "13px" : "14px",
                               color: TEXT_SECONDARY,
                               lineHeight: 1.5,
                               marginBottom: "10px",
@@ -1506,27 +1607,38 @@ export default function PromptsPage() {
                           >
                             {hub.description}
                           </p>
-                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                            {hub.specs.slice(0, 3).map((s) => (
-                              <span
-                                key={s}
-                                style={{
-                                  fontFamily: "var(--font-mono)",
-                                  fontSize: "10px",
-                                  letterSpacing: "0.08em",
-                                  color: TEXT_MUTED,
-                                  border: `1px solid ${BORDER}`,
-                                  padding: "3px 10px",
-                                }}
-                              >
-                                {s}
-                              </span>
-                            ))}
-                          </div>
+                          {!isMobile && (
+                            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                              {hub.specs.slice(0, 3).map((s) => (
+                                <span
+                                  key={s}
+                                  style={{
+                                    fontFamily: "var(--font-mono)",
+                                    fontSize: "10px",
+                                    letterSpacing: "0.08em",
+                                    color: TEXT_MUTED,
+                                    border: `1px solid ${BORDER}`,
+                                    padding: "3px 10px",
+                                  }}
+                                >
+                                  {s}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      <div style={{ display: "flex", alignItems: "center", gap: "16px", flexShrink: 0, paddingTop: "8px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: isMobile ? "12px" : "16px",
+                          flexShrink: 0,
+                          paddingTop: isMobile ? "0" : "8px",
+                          justifyContent: isMobile ? "flex-end" : "flex-start",
+                        }}
+                      >
                         <div onClick={(e) => e.stopPropagation()}>
                           <CopyButton text={hub.promptBlock} label="Copy prompt block" />
                         </div>
@@ -1549,20 +1661,20 @@ export default function PromptsPage() {
 
                     {/* Expanded content */}
                     {isExpanded && (
-                      <div style={{ paddingBottom: "40px" }}>
+                      <div style={{ paddingBottom: isMobile ? "24px" : "40px" }}>
                         {/* Reference images */}
                         {hub.images.length > 0 && (
                           <div
                             style={{
                               display: "grid",
-                              gridTemplateColumns: `repeat(${Math.min(hub.images.length, 4)}, 1fr)`,
+                              gridTemplateColumns: isMobile ? "1fr 1fr" : `repeat(${Math.min(hub.images.length, 4)}, 1fr)`,
                               gap: "4px",
-                              marginLeft: "60px",
+                              marginLeft: indent,
                               marginBottom: "24px",
                             }}
                           >
                             {hub.images.map((src, i) => (
-                              <div key={i} style={{ height: "280px", overflow: "hidden" }}>
+                              <div key={i} style={{ height: isMobile ? "120px" : "280px", overflow: "hidden" }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={src}
@@ -1589,7 +1701,7 @@ export default function PromptsPage() {
                         {/* Specs list */}
                         <div
                           style={{
-                            marginLeft: "60px",
+                            marginLeft: indent,
                             marginBottom: "24px",
                           }}
                         >
@@ -1606,7 +1718,7 @@ export default function PromptsPage() {
                           >
                             Design Specifications
                           </span>
-                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0" }}>
+                          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0" }}>
                             {hub.specs.map((spec, i) => (
                               <div
                                 key={spec}
@@ -1621,7 +1733,7 @@ export default function PromptsPage() {
                                 <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: TEXT_MUTED, width: "20px", flexShrink: 0 }}>
                                   {String(i + 1).padStart(2, "0")}
                                 </span>
-                                <span style={{ fontFamily: "var(--font-display)", fontSize: "14px", color: TEXT }}>
+                                <span style={{ fontFamily: "var(--font-display)", fontSize: isMobile ? "13px" : "14px", color: TEXT }}>
                                   {spec}
                                 </span>
                               </div>
@@ -1633,8 +1745,8 @@ export default function PromptsPage() {
                         <div
                           style={{
                             backgroundColor: BG_SUBTLE,
-                            padding: "28px 32px",
-                            marginLeft: "60px",
+                            padding: isMobile ? "20px 16px" : "28px 32px",
+                            marginLeft: indent,
                           }}
                         >
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
@@ -1653,7 +1765,7 @@ export default function PromptsPage() {
                           <p
                             style={{
                               fontFamily: "var(--font-display)",
-                              fontSize: "15px",
+                              fontSize: isMobile ? "13px" : "15px",
                               lineHeight: 1.75,
                               color: TEXT_SECONDARY,
                               whiteSpace: "pre-line",
@@ -1670,7 +1782,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Brand Assets */}
-            <div data-reveal style={{ marginTop: "64px" }}>
+            <div data-reveal style={{ marginTop: isMobile ? "40px" : "64px" }}>
               <div
                 style={{
                   display: "flex",
@@ -1678,7 +1790,9 @@ export default function PromptsPage() {
                   alignItems: "baseline",
                   paddingBottom: "16px",
                   borderBottom: `1px solid ${BORDER}`,
-                  marginBottom: "32px",
+                  marginBottom: isMobile ? "20px" : "32px",
+                  flexWrap: "wrap",
+                  gap: "4px",
                 }}
               >
                 <h3
@@ -1701,8 +1815,8 @@ export default function PromptsPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(5, 1fr)",
-                  gap: "16px",
+                  gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5, 1fr)",
+                  gap: isMobile ? "12px" : "16px",
                 }}
               >
                 {BRAND_ASSETS.map((asset) => (
@@ -1715,7 +1829,7 @@ export default function PromptsPage() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        padding: "20px",
+                        padding: isMobile ? "16px" : "20px",
                         marginBottom: "12px",
                         overflow: "hidden",
                       }}
@@ -1736,7 +1850,7 @@ export default function PromptsPage() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontWeight: 500,
-                        fontSize: "14px",
+                        fontSize: isMobile ? "13px" : "14px",
                         color: TEXT,
                         marginBottom: "4px",
                       }}
@@ -1746,7 +1860,7 @@ export default function PromptsPage() {
                     <p
                       style={{
                         fontFamily: "var(--font-mono)",
-                        fontSize: "11px",
+                        fontSize: isMobile ? "10px" : "11px",
                         lineHeight: 1.5,
                         color: TEXT_MUTED,
                       }}
@@ -1759,7 +1873,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Usage guide */}
-            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: isMobile ? "24px 16px" : "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -1776,7 +1890,7 @@ export default function PromptsPage() {
               <p
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "15px",
+                  fontSize: isMobile ? "13px" : "15px",
                   lineHeight: 1.65,
                   color: "rgba(255,255,255,0.45)",
                   marginBottom: "28px",
@@ -1789,7 +1903,7 @@ export default function PromptsPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
                   gap: "1px",
                   backgroundColor: "rgba(255,255,255,0.08)",
                 }}
@@ -1803,7 +1917,7 @@ export default function PromptsPage() {
                     key={s.step}
                     style={{
                       backgroundColor: DARK,
-                      padding: "20px",
+                      padding: isMobile ? "16px" : "20px",
                     }}
                   >
                     <span
@@ -1820,7 +1934,7 @@ export default function PromptsPage() {
                     <span
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "15px",
+                        fontSize: isMobile ? "14px" : "15px",
                         fontWeight: 500,
                         color: "rgba(255,255,255,0.7)",
                       }}
@@ -1836,7 +1950,7 @@ export default function PromptsPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer style={{ backgroundColor: DARK, padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)" }}>
+      <footer style={{ backgroundColor: DARK, padding: isMobile ? "40px 16px" : "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)" }}>
         <div
           style={{
             maxWidth: "1280px",
