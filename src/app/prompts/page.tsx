@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 // ─── Atuin-inspired Design Tokens ────────────────────────────────────────────
 const TEXT = "#111111";
@@ -459,7 +459,7 @@ function SceneCard({
   onToggle: () => void;
 }) {
   return (
-    <div style={{ borderBottom: `1px solid ${BORDER}` }}>
+    <div data-reveal style={{ borderBottom: `1px solid ${BORDER}` }}>
       {/* Header */}
       <div
         onClick={onToggle}
@@ -683,6 +683,57 @@ export default function PromptsPage() {
     { key: "hardware", label: "Hardware" },
   ];
 
+  // ── Parallax scroll for hero ──
+  const heroRef = useRef<HTMLDivElement>(null);
+  const heroImgRef = useRef<HTMLImageElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback(() => {
+    const scrollY = window.scrollY;
+    if (heroImgRef.current) {
+      heroImgRef.current.style.transform = `translateY(${scrollY * 0.35}px) scale(1.1)`;
+    }
+    if (heroContentRef.current) {
+      heroContentRef.current.style.transform = `translateY(${scrollY * 0.15}px)`;
+      heroContentRef.current.style.opacity = `${Math.max(0, 1 - scrollY / 600)}`;
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  // ── Intersection Observer for reveal animations ──
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).style.opacity = "1";
+            (entry.target as HTMLElement).style.transform = "translateY(0)";
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    const main = mainRef.current;
+    if (main) {
+      const elements = main.querySelectorAll("[data-reveal]");
+      elements.forEach((el) => {
+        (el as HTMLElement).style.opacity = "0";
+        (el as HTMLElement).style.transform = "translateY(32px)";
+        (el as HTMLElement).style.transition = "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)";
+        observer.observe(el);
+      });
+    }
+
+    return () => observer.disconnect();
+  }, [activeTab]);
+
   const heroImages: Record<Tab, { src: string; title: string; subtitle: string }> = {
     scenes: {
       src: "/images/bace/hero-hub-greenery.jpg",
@@ -789,6 +840,7 @@ export default function PromptsPage() {
 
       {/* ── Hero ── */}
       <section
+        ref={heroRef}
         style={{
           position: "relative",
           height: "100vh",
@@ -797,16 +849,17 @@ export default function PromptsPage() {
           overflow: "hidden",
         }}
       >
-        {/* Background image */}
+        {/* Background image — parallax */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
+            inset: "-15%",
             zIndex: 0,
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            ref={heroImgRef}
             src={currentHero.src}
             alt=""
             style={{
@@ -815,7 +868,8 @@ export default function PromptsPage() {
               objectFit: "cover",
               objectPosition: "center 60%",
               display: "block",
-              transition: "opacity 0.5s ease",
+              transform: "scale(1.1)",
+              willChange: "transform",
             }}
           />
           {/* Gradient overlay */}
@@ -828,8 +882,9 @@ export default function PromptsPage() {
           />
         </div>
 
-        {/* Content */}
+        {/* Content — parallax text */}
         <div
+          ref={heroContentRef}
           style={{
             position: "relative",
             zIndex: 1,
@@ -837,6 +892,7 @@ export default function PromptsPage() {
             maxWidth: "1280px",
             margin: "0 auto",
             width: "100%",
+            willChange: "transform, opacity",
           }}
         >
           <h1
@@ -869,16 +925,17 @@ export default function PromptsPage() {
 
       {/* ── Content ── */}
       <main
+        ref={mainRef}
         style={{
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "0 clamp(20px, 4vw, 80px) clamp(80px, 10vw, 140px)",
+          padding: "clamp(60px, 8vw, 100px) clamp(20px, 4vw, 80px) clamp(80px, 10vw, 140px)",
         }}
       >
         {/* ── TAB: 12 Canonical Scenes ── */}
         {activeTab === "scenes" && (
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
+            <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
               <h2
                 style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", color: TEXT_MUTED }}
               >
@@ -901,7 +958,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Variation rule */}
-            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -959,6 +1016,7 @@ export default function PromptsPage() {
         {activeTab === "categories" && (
           <div>
             <h2
+              data-reveal
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 500,
@@ -972,6 +1030,7 @@ export default function PromptsPage() {
               Four master <em style={{ fontStyle: "italic" }}>categories</em>
             </h2>
             <p
+              data-reveal
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "16px",
@@ -988,6 +1047,7 @@ export default function PromptsPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "0", borderTop: `1px solid ${BORDER}` }}>
               {MASTER_CATEGORIES.map((cat, i) => (
                 <div
+                  data-reveal
                   key={cat.id}
                   style={{ borderBottom: `1px solid ${BORDER}`, padding: "40px 0" }}
                 >
@@ -1044,7 +1104,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Energy boost */}
-            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -1100,6 +1160,7 @@ export default function PromptsPage() {
         {activeTab === "dna" && (
           <div>
             <h2
+              data-reveal
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 500,
@@ -1113,6 +1174,7 @@ export default function PromptsPage() {
               The bace <em style={{ fontStyle: "italic" }}>Visual DNA</em>
             </h2>
             <p
+              data-reveal
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "16px",
@@ -1128,7 +1190,7 @@ export default function PromptsPage() {
             </p>
 
             {/* DNA Block */}
-            <div style={{ marginBottom: "48px" }}>
+            <div data-reveal style={{ marginBottom: "48px" }}>
               <div
                 style={{
                   display: "flex",
@@ -1162,7 +1224,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Key Characteristics */}
-            <div style={{ marginBottom: "48px" }}>
+            <div data-reveal style={{ marginBottom: "48px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -1200,7 +1262,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Hidden Rule */}
-            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginBottom: "48px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginBottom: "48px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -1302,6 +1364,7 @@ export default function PromptsPage() {
         {activeTab === "hardware" && (
           <div>
             <h2
+              data-reveal
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 500,
@@ -1315,6 +1378,7 @@ export default function PromptsPage() {
               Hardware <em style={{ fontStyle: "italic" }}>reference</em>
             </h2>
             <p
+              data-reveal
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "16px",
@@ -1331,6 +1395,7 @@ export default function PromptsPage() {
 
             {/* Important note */}
             <div
+              data-reveal
               style={{
                 backgroundColor: BG_SUBTLE,
                 padding: "20px 24px",
@@ -1357,7 +1422,7 @@ export default function PromptsPage() {
               {HUB_PRODUCTS.map((hub) => {
                 const isExpanded = expandedHub === hub.id;
                 return (
-                  <div key={hub.id} style={{ borderBottom: `1px solid ${BORDER}` }}>
+                  <div data-reveal key={hub.id} style={{ borderBottom: `1px solid ${BORDER}` }}>
                     {/* Header */}
                     <div
                       onClick={() => setExpandedHub(isExpanded ? null : hub.id)}
@@ -1605,7 +1670,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Brand Assets */}
-            <div style={{ marginTop: "64px" }}>
+            <div data-reveal style={{ marginTop: "64px" }}>
               <div
                 style={{
                   display: "flex",
@@ -1694,7 +1759,7 @@ export default function PromptsPage() {
             </div>
 
             {/* Usage guide */}
-            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+            <div data-reveal style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
