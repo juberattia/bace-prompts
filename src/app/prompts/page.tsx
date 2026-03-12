@@ -10,6 +10,7 @@ const BG = "#ffffff";
 const BG_SUBTLE = "#f7f7f7";
 const BORDER = "#e8e8e8";
 const DARK = "#111111";
+const NEON_GREEN = "#C8E632";
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── Visual DNA ──────────────────────────────────────────────────────────────
@@ -687,11 +688,15 @@ export default function PromptsPage() {
       {/* ── Nav ── */}
       <nav
         style={{
-          position: "sticky",
+          position: "fixed",
           top: 0,
-          zIndex: 20,
-          backgroundColor: BG,
-          borderBottom: `1px solid ${BORDER}`,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          backgroundColor: "rgba(255, 255, 255, 0.12)",
+          backdropFilter: "blur(20px) saturate(180%)",
+          WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
           padding: "0 clamp(20px, 4vw, 80px)",
           height: "64px",
           display: "flex",
@@ -700,8 +705,10 @@ export default function PromptsPage() {
         }}
       >
         <button
-          onClick={() => setActiveTab("scenes")}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}
+          onClick={() => { setActiveTab("scenes"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", transition: "filter 0.2s ease" }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = `drop-shadow(0 0 8px ${NEON_GREEN})`; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = "none"; }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -720,13 +727,23 @@ export default function PromptsPage() {
                 fontFamily: "var(--font-mono)",
                 fontSize: "12px",
                 letterSpacing: "0.04em",
-                color: activeTab === tab.key ? TEXT : TEXT_MUTED,
+                color: activeTab === tab.key ? "#ffffff" : "rgba(255,255,255,0.55)",
                 backgroundColor: "transparent",
                 border: "none",
                 cursor: "pointer",
                 padding: "4px 0",
-                borderBottom: activeTab === tab.key ? `1.5px solid ${TEXT}` : "1.5px solid transparent",
-                transition: "color 0.2s ease, border-color 0.2s ease",
+                borderBottom: activeTab === tab.key ? `1.5px solid ${NEON_GREEN}` : "1.5px solid transparent",
+                transition: "color 0.25s ease, border-color 0.25s ease, text-shadow 0.25s ease",
+              }}
+              onMouseEnter={(e) => {
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.color = NEON_GREEN;
+                btn.style.textShadow = `0 0 12px ${NEON_GREEN}`;
+              }}
+              onMouseLeave={(e) => {
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.color = activeTab === tab.key ? "#ffffff" : "rgba(255,255,255,0.55)";
+                btn.style.textShadow = "none";
               }}
             >
               {tab.label}
@@ -741,7 +758,7 @@ export default function PromptsPage() {
       <section
         style={{
           position: "relative",
-          minHeight: "70vh",
+          height: "100vh",
           display: "flex",
           alignItems: "flex-end",
           overflow: "hidden",
@@ -814,53 +831,6 @@ export default function PromptsPage() {
             12 canonical scenes that define the entire bace visual universe.
             Every photo, AI image, campaign or social visual is a variation of one of these scenes.
           </p>
-        </div>
-      </section>
-
-      {/* ── Stats ── */}
-      <section
-        style={{
-          padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)",
-          maxWidth: "1280px",
-          margin: "0 auto",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "24px",
-            borderTop: `1px solid ${BORDER}`,
-            borderBottom: `1px solid ${BORDER}`,
-            padding: "40px 0",
-          }}
-        >
-          {[
-            { num: "12", label: "Canonical scenes" },
-            { num: "4", label: "Master prompt categories" },
-            { num: "4", label: "Hub products" },
-            { num: "28\u201335mm", label: "Lens language" },
-          ].map((stat) => (
-            <div key={stat.label}>
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: "clamp(28px, 3.5vw, 48px)",
-                  letterSpacing: "-0.03em",
-                  color: TEXT,
-                  display: "block",
-                  lineHeight: 1.1,
-                  marginBottom: "8px",
-                }}
-              >
-                {stat.num}
-              </span>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.08em", color: TEXT_MUTED }}>
-                {stat.label}
-              </span>
-            </div>
-          ))}
         </div>
       </section>
 
