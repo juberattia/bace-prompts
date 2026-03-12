@@ -213,6 +213,101 @@ const MASTER_CATEGORIES: MasterCategory[] = [
   },
 ];
 
+// ─── Hardware Product Lineup ─────────────────────────────────────────────────
+
+interface HubProduct {
+  id: string;
+  name: string;
+  subtitle: string;
+  description: string;
+  specs: string[];
+  promptBlock: string;
+  images: string[];
+}
+
+const HUB_PRODUCTS: HubProduct[] = [
+  {
+    id: "double-sided",
+    name: "bace Hub",
+    subtitle: "Double-Sided",
+    description:
+      "The flagship outdoor smart parcel locker. Freestanding unit accessible from both sides, designed for high-traffic sidewalks and public spaces. Light grey powder-coated steel body with flat roof overhang.",
+    specs: [
+      "Light grey powder-coated steel",
+      "\"bace\" logo in black lowercase sans-serif on side panels",
+      "Flat roof with slight overhang and dark trim edge",
+      "Front: grid of compartment doors in varying sizes (small top, larger bottom)",
+      "QR code + \"Scan here\" label on front face",
+      "Model ID printed top-right (e.g. BUEXE-A / BUEXE-B)",
+      "URL reference: qr.bacehub.de printed on top edge",
+      "Double-sided: lockers accessible from both front and back",
+      "Approx. 2m wide x 1.5m tall x 1m deep",
+      "Sits on concrete/paved ground pad",
+    ],
+    promptBlock: `The bace Hub Double-Sided is a freestanding outdoor smart parcel locker made of light grey powder-coated steel with a flat roof and slight overhang with dark trim. The "bace" logo appears in lowercase black sans-serif typography on the side panels. The front panel has a grid of compartment doors in varying sizes — smaller compartments at the top, larger at the bottom. A QR code with "Scan here" label is visible on the front face. The unit is approximately 2 meters wide, 1.5 meters tall, and accessible from both sides. It sits on a concrete ground pad in an urban street environment.`,
+    images: [
+      "/images/bace/hub-double-front-group.png",
+      "/images/bace/hub-double-side-person.jpeg",
+      "/images/bace/hub-double-corner-trees.png",
+    ],
+  },
+  {
+    id: "single-sided",
+    name: "bace Hub",
+    subtitle: "Single-Sided",
+    description:
+      "Compact outdoor version for wall-adjacent or space-constrained placements. Same design language as the Double-Sided but with locker access from one side only. Ideal for building facades and narrow sidewalks.",
+    specs: [
+      "Same light grey powder-coated steel finish",
+      "\"bace\" logo in black lowercase on side panel",
+      "Single-access front: grid of compartment doors",
+      "Closed rear panel (can be placed against walls)",
+      "QR code + \"Scan here\" on front face",
+      "Flat roof with dark trim overhang",
+      "Narrower depth than Double-Sided",
+      "Approx. 2m wide x 1.5m tall",
+    ],
+    promptBlock: `The bace Hub Single-Sided is a compact outdoor smart parcel locker made of light grey powder-coated steel with a flat roof and dark trim. The "bace" logo appears in lowercase black sans-serif on the side panel. The front has a grid of compartment doors in varying sizes with a QR code and "Scan here" label. The rear panel is closed, allowing wall-adjacent placement. Same design language as the Double-Sided hub but with a narrower profile.`,
+    images: [],
+  },
+  {
+    id: "mobile",
+    name: "bace",
+    subtitle: "Mobile Hub",
+    description:
+      "Deployable parcel hub on wheels for events, pop-ups, and temporary locations. Can be transported and repositioned. Same bace design language adapted for mobility.",
+    specs: [
+      "Light grey powder-coated steel body",
+      "\"bace\" branding in black lowercase",
+      "Integrated wheels / transport base",
+      "Compact footprint for temporary deployment",
+      "Fewer compartments than fixed hubs",
+      "QR code access system",
+      "Designed for events, festivals, pop-up retail",
+    ],
+    promptBlock: `The bace Mobile Hub is a transportable smart parcel locker on wheels made of light grey powder-coated steel. It carries the "bace" logo in lowercase black sans-serif. Compact design with fewer compartments, built for temporary deployment at events, pop-ups, and festivals. Same clean industrial aesthetic as the fixed bace Hubs.`,
+    images: [],
+  },
+  {
+    id: "indoor",
+    name: "bace",
+    subtitle: "Indoor Hub",
+    description:
+      "Interior version for lobbies, coworking spaces, residential buildings, and retail environments. Sleeker profile adapted for indoor contexts while maintaining the bace design identity.",
+    specs: [
+      "Light grey or white powder-coated steel",
+      "\"bace\" branding in black lowercase",
+      "Slimmer profile for indoor spaces",
+      "Grid of compartment doors",
+      "QR code / digital access system",
+      "No weather protection needed (no roof overhang)",
+      "Designed for lobbies, offices, residential buildings",
+    ],
+    promptBlock: `The bace Indoor Hub is a sleek indoor smart parcel locker made of light grey or white powder-coated steel. The "bace" logo appears in lowercase black sans-serif. Slimmer profile than outdoor hubs, with a grid of compartment doors and QR code access. Designed for building lobbies, coworking spaces, and residential buildings. Clean, minimal industrial design.`,
+    images: [],
+  },
+];
+
 // ─── Visual Rules ────────────────────────────────────────────────────────────
 
 const VISUAL_CHARACTERISTICS = [
@@ -512,16 +607,19 @@ function SceneCard({
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
-type Tab = "scenes" | "categories" | "dna";
+type Tab = "scenes" | "categories" | "dna" | "hardware";
 
 export default function PromptsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("scenes");
 
+  const [expandedHub, setExpandedHub] = useState<string | null>(null);
+
   const tabs: { key: Tab; label: string }[] = [
     { key: "scenes", label: "12 Scenes" },
     { key: "categories", label: "Master Prompts" },
     { key: "dna", label: "Visual DNA" },
+    { key: "hardware", label: "Hardware" },
   ];
 
   return (
@@ -635,8 +733,8 @@ export default function PromptsPage() {
           {[
             { num: "12", label: "Canonical scenes" },
             { num: "4", label: "Master prompt categories" },
+            { num: "4", label: "Hub products" },
             { num: "28\u201335mm", label: "Lens language" },
-            { num: "1\u20132m", label: "Camera distance" },
           ].map((stat) => (
             <div key={stat.label}>
               <span
@@ -1089,6 +1187,388 @@ export default function PromptsPage() {
               ].join("\n")}
               label="Copy entire Visual DNA"
             />
+          </div>
+        )}
+
+        {/* ── TAB: Hardware Reference ── */}
+        {activeTab === "hardware" && (
+          <div>
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 500,
+                fontSize: "clamp(28px, 4vw, 44px)",
+                letterSpacing: "-0.02em",
+                color: TEXT,
+                marginBottom: "16px",
+                lineHeight: 1.15,
+              }}
+            >
+              Hardware <em style={{ fontStyle: "italic" }}>reference</em>
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "16px",
+                lineHeight: 1.65,
+                color: TEXT_SECONDARY,
+                maxWidth: "600px",
+                marginBottom: "56px",
+              }}
+            >
+              The bace Hub product lineup. Use these references to ensure AI-generated
+              visuals accurately represent the hardware &mdash; material, dimensions, branding,
+              and design must not be changed.
+            </p>
+
+            {/* Important note */}
+            <div
+              style={{
+                backgroundColor: BG_SUBTLE,
+                padding: "20px 24px",
+                marginBottom: "48px",
+                borderLeft: `3px solid ${TEXT}`,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  letterSpacing: "0.04em",
+                  color: TEXT,
+                  lineHeight: 1.7,
+                }}
+              >
+                Copy the hardware prompt block for the specific hub type and prepend it to any scene or master prompt.
+                The product design is fixed &mdash; only vary the environment, people, and lighting.
+              </p>
+            </div>
+
+            {/* Hub products */}
+            <div style={{ borderTop: `1px solid ${BORDER}` }}>
+              {HUB_PRODUCTS.map((hub) => {
+                const isExpanded = expandedHub === hub.id;
+                return (
+                  <div key={hub.id} style={{ borderBottom: `1px solid ${BORDER}` }}>
+                    {/* Header */}
+                    <div
+                      onClick={() => setExpandedHub(isExpanded ? null : hub.id)}
+                      style={{
+                        padding: "32px 0",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        justifyContent: "space-between",
+                        gap: "24px",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: "32px", flex: 1, minWidth: 0 }}>
+                        {/* Thumbnail or placeholder */}
+                        <div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
+                          {hub.images.length > 0 ? (
+                            hub.images.slice(0, 2).map((src, i) => (
+                              <div
+                                key={i}
+                                style={{
+                                  width: i === 0 ? "120px" : "80px",
+                                  height: "80px",
+                                  overflow: "hidden",
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={src}
+                                  alt=""
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    display: "block",
+                                  }}
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <div
+                              style={{
+                                width: "120px",
+                                height: "80px",
+                                backgroundColor: BG_SUBTLE,
+                                border: `1px solid ${BORDER}`,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: TEXT_MUTED }}>
+                                No photo yet
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div style={{ minWidth: 0 }}>
+                          <h3
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontWeight: 500,
+                              fontSize: "clamp(22px, 2.5vw, 32px)",
+                              letterSpacing: "-0.02em",
+                              color: TEXT,
+                              lineHeight: 1.15,
+                              marginBottom: "6px",
+                            }}
+                          >
+                            {hub.name} <em style={{ fontStyle: "italic" }}>{hub.subtitle}</em>
+                          </h3>
+                          <p
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontSize: "14px",
+                              color: TEXT_SECONDARY,
+                              lineHeight: 1.5,
+                              marginBottom: "10px",
+                            }}
+                          >
+                            {hub.description}
+                          </p>
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                            {hub.specs.slice(0, 3).map((s) => (
+                              <span
+                                key={s}
+                                style={{
+                                  fontFamily: "var(--font-mono)",
+                                  fontSize: "10px",
+                                  letterSpacing: "0.08em",
+                                  color: TEXT_MUTED,
+                                  border: `1px solid ${BORDER}`,
+                                  padding: "3px 10px",
+                                }}
+                              >
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", gap: "16px", flexShrink: 0, paddingTop: "8px" }}>
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <CopyButton text={hub.promptBlock} label="Copy prompt block" />
+                        </div>
+                        <span
+                          style={{
+                            fontFamily: "var(--font-display)",
+                            fontSize: "24px",
+                            fontWeight: 300,
+                            color: TEXT_MUTED,
+                            transform: isExpanded ? "rotate(45deg)" : "rotate(0deg)",
+                            transition: "transform 0.25s ease",
+                            display: "inline-block",
+                            lineHeight: 1,
+                          }}
+                        >
+                          +
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Expanded content */}
+                    {isExpanded && (
+                      <div style={{ paddingBottom: "40px" }}>
+                        {/* Reference images */}
+                        {hub.images.length > 0 && (
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: `repeat(${Math.min(hub.images.length, 3)}, 1fr)`,
+                              gap: "4px",
+                              marginLeft: "60px",
+                              marginBottom: "24px",
+                            }}
+                          >
+                            {hub.images.map((src, i) => (
+                              <div key={i} style={{ height: "280px", overflow: "hidden" }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={src}
+                                  alt=""
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    display: "block",
+                                    transition: "transform 0.3s ease",
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    (e.currentTarget as HTMLImageElement).style.transform = "scale(1)";
+                                  }}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Specs list */}
+                        <div
+                          style={{
+                            marginLeft: "60px",
+                            marginBottom: "24px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "var(--font-mono)",
+                              fontSize: "10px",
+                              letterSpacing: "0.15em",
+                              textTransform: "uppercase",
+                              color: TEXT_MUTED,
+                              display: "block",
+                              marginBottom: "16px",
+                            }}
+                          >
+                            Design Specifications
+                          </span>
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0" }}>
+                            {hub.specs.map((spec, i) => (
+                              <div
+                                key={spec}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                  padding: "10px 0",
+                                  borderBottom: `1px solid ${BORDER}`,
+                                }}
+                              >
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: TEXT_MUTED, width: "20px", flexShrink: 0 }}>
+                                  {String(i + 1).padStart(2, "0")}
+                                </span>
+                                <span style={{ fontFamily: "var(--font-display)", fontSize: "14px", color: TEXT }}>
+                                  {spec}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Prompt block */}
+                        <div
+                          style={{
+                            backgroundColor: BG_SUBTLE,
+                            padding: "28px 32px",
+                            marginLeft: "60px",
+                          }}
+                        >
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+                            <span
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "10px",
+                                letterSpacing: "0.15em",
+                                textTransform: "uppercase",
+                                color: TEXT_MUTED,
+                              }}
+                            >
+                              Hardware Prompt Block
+                            </span>
+                          </div>
+                          <p
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontSize: "15px",
+                              lineHeight: 1.75,
+                              color: TEXT_SECONDARY,
+                              whiteSpace: "pre-line",
+                            }}
+                          >
+                            {hub.promptBlock}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Usage guide */}
+            <div style={{ backgroundColor: DARK, padding: "clamp(32px, 4vw, 56px)", marginTop: "40px" }}>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 500,
+                  fontSize: "clamp(20px, 2.5vw, 28px)",
+                  letterSpacing: "-0.02em",
+                  color: BG,
+                  marginBottom: "12px",
+                  lineHeight: 1.15,
+                }}
+              >
+                How to <em style={{ fontStyle: "italic" }}>use</em>
+              </h3>
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "15px",
+                  lineHeight: 1.65,
+                  color: "rgba(255,255,255,0.45)",
+                  marginBottom: "28px",
+                  maxWidth: "560px",
+                }}
+              >
+                Combine a hardware prompt block with any scene or master prompt.
+                The hardware block describes the product accurately &mdash; the scene prompt sets the environment and mood.
+              </p>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "1px",
+                  backgroundColor: "rgba(255,255,255,0.08)",
+                }}
+              >
+                {[
+                  { step: "01", text: "Pick the hub type" },
+                  { step: "02", text: "Copy its prompt block" },
+                  { step: "03", text: "Prepend to any scene prompt" },
+                ].map((s) => (
+                  <div
+                    key={s.step}
+                    style={{
+                      backgroundColor: DARK,
+                      padding: "20px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "11px",
+                        color: "rgba(255,255,255,0.3)",
+                        display: "block",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      {s.step}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "15px",
+                        fontWeight: 500,
+                        color: "rgba(255,255,255,0.7)",
+                      }}
+                    >
+                      {s.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </main>
