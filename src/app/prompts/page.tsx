@@ -729,37 +729,81 @@ export default function PromptsPage() {
       {/* ── Hero ── */}
       <section
         style={{
-          padding: "clamp(60px, 10vw, 140px) clamp(20px, 4vw, 80px) 0",
-          maxWidth: "1280px",
-          margin: "0 auto",
+          position: "relative",
+          minHeight: "70vh",
+          display: "flex",
+          alignItems: "flex-end",
+          overflow: "hidden",
         }}
       >
-        <h1
+        {/* Background image */}
+        <div
           style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 500,
-            fontSize: "clamp(40px, 7vw, 88px)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1.05,
-            color: TEXT,
-            marginBottom: "32px",
+            position: "absolute",
+            inset: 0,
+            zIndex: 0,
           }}
         >
-          The visual <em style={{ fontStyle: "italic" }}>system</em>
-        </h1>
-        <p
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/bace/hero-hub-greenery.jpg"
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 60%",
+              display: "block",
+            }}
+          />
+          {/* Gradient overlay */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+        </div>
+
+        {/* Content */}
+        <div
           style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(16px, 1.5vw, 20px)",
-            lineHeight: 1.65,
-            color: TEXT_SECONDARY,
-            maxWidth: "600px",
-            fontWeight: 400,
+            position: "relative",
+            zIndex: 1,
+            padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 80px)",
+            maxWidth: "1280px",
+            margin: "0 auto",
+            width: "100%",
           }}
         >
-          12 canonical scenes that define the entire bace visual universe.
-          Every photo, AI image, campaign or social visual is a variation of one of these scenes.
-        </p>
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 500,
+              fontSize: "clamp(40px, 7vw, 88px)",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.05,
+              color: "#ffffff",
+              marginBottom: "20px",
+            }}
+          >
+            The visual <em style={{ fontStyle: "italic" }}>system</em>
+          </h1>
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(16px, 1.5vw, 20px)",
+              lineHeight: 1.65,
+              color: "rgba(255,255,255,0.7)",
+              maxWidth: "560px",
+              fontWeight: 400,
+            }}
+          >
+            12 canonical scenes that define the entire bace visual universe.
+            Every photo, AI image, campaign or social visual is a variation of one of these scenes.
+          </p>
+        </div>
       </section>
 
       {/* ── Stats ── */}
