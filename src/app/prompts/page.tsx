@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 // ─── Atuin-inspired Design Tokens ────────────────────────────────────────────
 const TEXT = "#111111";
@@ -689,11 +688,17 @@ export default function PromptsPage() {
           justifyContent: "space-between",
         }}
       >
-        <Link href="/" style={{ textDecoration: "none", color: TEXT }}>
-          <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "16px" }}>
-            bace
-          </span>
-        </Link>
+        <button
+          onClick={() => setActiveTab("scenes")}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/bace/brand/bace-logo.png"
+            alt="bace"
+            style={{ height: "20px", width: "auto", display: "block" }}
+          />
+        </button>
 
         <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
           {tabs.map((tab) => (
@@ -718,12 +723,7 @@ export default function PromptsPage() {
           ))}
         </div>
 
-        <Link
-          href="/projects"
-          style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: TEXT_MUTED, textDecoration: "none" }}
-        >
-          Projects
-        </Link>
+        <span style={{ width: "60px" }} />
       </nav>
 
       {/* ── Hero ── */}
@@ -1726,26 +1726,15 @@ export default function PromptsPage() {
           }}
         >
           <div>
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "16px", color: BG, display: "block", marginBottom: "12px" }}>
-              bace
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/bace/brand/bace-logo.png"
+              alt="bace"
+              style={{ height: "18px", width: "auto", display: "block", marginBottom: "12px", filter: "invert(1)" }}
+            />
             <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.35)", lineHeight: 1.7 }}>
               Visual system &mdash; moodboard calibrated
             </span>
-          </div>
-          <div style={{ display: "flex", gap: "48px" }}>
-            {[
-              { label: "Prompts", href: "/prompts" },
-              { label: "Projects", href: "/projects" },
-            ].map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
-              >
-                {link.label}
-              </Link>
-            ))}
           </div>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.25)" }}>
             2026
