@@ -63,8 +63,8 @@ a {
    ================================================ */
 
 ::selection {
-  background: var(--color-primary);
-  color: var(--color-bg);
+  background: #C8E632;
+  color: #111111;
 }
 
 /* ================================================
