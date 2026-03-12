@@ -249,9 +249,20 @@ const HUB_PRODUCTS: HubProduct[] = [
     ],
     promptBlock: `The bace Hub Double-Sided is a freestanding outdoor smart parcel locker made of light grey powder-coated steel. It stands 2.15 meters tall, 1.25 meters deep, and approximately 3.3 meters long (5-frame configuration). It has a flat roof with a slight overhang and dark trim edge. The "bace" logo appears in lowercase black custom geometric sans-serif typography on both side panels. Both front and back panels have a grid of compartment doors in varying sizes — smaller compartments at the top, larger at the bottom. A QR code with the "bace" wordmark centered inside it and a "scan me" label are visible on the front face. The hub name and URL (qr.bacehub.de) are printed on the top edge. It sits on a concrete ground pad in an urban street environment.`,
     images: [
-      "/images/bace/hub-double-front-group.png",
-      "/images/bace/hub-double-side-person.jpeg",
-      "/images/bace/hub-double-corner-trees.png",
+      "/images/bace/hub-double-50.jpg",
+      "/images/bace/hub-double-51.jpg",
+      "/images/bace/hub-double-53.jpg",
+      "/images/bace/hub-double-54.jpg",
+      "/images/bace/hub-double-55.jpg",
+      "/images/bace/hub-double-56.jpg",
+      "/images/bace/hub-double-58.jpg",
+      "/images/bace/hub-double-59.jpg",
+      "/images/bace/hub-double-60.jpg",
+      "/images/bace/hub-double-61.jpg",
+      "/images/bace/hub-double-64.jpg",
+      "/images/bace/hub-double-65.jpg",
+      "/images/bace/hub-double-68-1.jpg",
+      "/images/bace/hub-double-71.jpg",
     ],
   },
   {
@@ -1476,7 +1487,7 @@ export default function PromptsPage() {
                           <div
                             style={{
                               display: "grid",
-                              gridTemplateColumns: `repeat(${Math.min(hub.images.length, 3)}, 1fr)`,
+                              gridTemplateColumns: `repeat(${Math.min(hub.images.length, 4)}, 1fr)`,
                               gap: "4px",
                               marginLeft: "60px",
                               marginBottom: "24px",
