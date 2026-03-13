@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // ─── Atuin-inspired Design Tokens ────────────────────────────────────────────
 const TEXT = "#111111";
@@ -1843,21 +1844,54 @@ export default function PromptsPage() {
           gap: isMobile ? "8px" : "0",
         }}
       >
-        <button
-          onClick={() => { setActiveTab("scenes"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", transition: "filter 0.2s ease", flexShrink: 0 }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = `drop-shadow(0 0 8px ${NEON_GREEN})`; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = "none"; }}
-        >
-          <Image
-            src="/images/bace/brand/bace-logo.png"
-            alt="bace"
-            width={120}
-            height={40}
-            priority
-            style={{ height: isMobile ? "28px" : "40px", width: "auto", display: "block" }}
-          />
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "8px" : "12px", flexShrink: 0 }}>
+          <Link
+            href="/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: isMobile ? "6px 10px" : "7px 14px",
+              borderRadius: "8px",
+              border: "none",
+              backgroundColor: DARK,
+              color: "#ffffff",
+              fontSize: isMobile ? "11px" : "12px",
+              fontFamily: "var(--font-mono)",
+              fontWeight: 700,
+              textDecoration: "none",
+              transition: "all 0.15s ease",
+              whiteSpace: "nowrap",
+              letterSpacing: "0.02em",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = NEON_GREEN;
+              e.currentTarget.style.color = DARK;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = DARK;
+              e.currentTarget.style.color = "#ffffff";
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            {!isMobile && "Studio"}
+          </Link>
+          <button
+            onClick={() => { setActiveTab("scenes"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", transition: "filter 0.2s ease", flexShrink: 0 }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = `drop-shadow(0 0 8px ${NEON_GREEN})`; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = "none"; }}
+          >
+            <Image
+              src="/images/bace/brand/bace-logo.png"
+              alt="bace"
+              width={120}
+              height={40}
+              priority
+              style={{ height: isMobile ? "28px" : "40px", width: "auto", display: "block" }}
+            />
+          </button>
+        </div>
 
         <div
           style={{
