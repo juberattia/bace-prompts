@@ -843,7 +843,7 @@ export default function PromptsPage() {
       subtitle: "The bace Hub product lineup. Reference images and prompt blocks to ensure AI-generated visuals accurately represent the hardware.",
     },
     create: {
-      src: "/images/bace/hero-hub-greenery.jpg",
+      src: "/images/bace/hub-presentation-59.jpg",
       title: "Prompt",
       subtitle: "Assemble a complete AI image generation prompt from scenes, categories, hardware, and visual DNA. Copy and paste into nano banana pro.",
     },
