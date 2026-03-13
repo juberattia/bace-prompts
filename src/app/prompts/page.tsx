@@ -779,6 +779,366 @@ const BRIEFING_HEADERS: BriefingHeader[] = [
   },
 ];
 
+// ─── Briefing Configurator Component ─────────────────────────────────────────
+
+function BriefingConfigurator({ isMobile }: { isMobile: boolean }) {
+  const [briefingText, setBriefingText] = useState("");
+  const [includeVisualDna, setIncludeVisualDna] = useState(true);
+  const [includeBoost, setIncludeBoost] = useState(true);
+  const [selectedHubId, setSelectedHubId] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const selectedHub = useMemo(
+    () => (selectedHubId ? HUB_PRODUCTS.find((h) => h.id === selectedHubId) ?? null : null),
+    [selectedHubId]
+  );
+
+  const assembled = useMemo(() => {
+    const parts: string[] = [];
+    if (briefingText.trim()) parts.push(briefingText.trim());
+    if (selectedHub) parts.push(selectedHub.promptBlock);
+    if (includeVisualDna) parts.push(VISUAL_DNA);
+    if (includeBoost) parts.push(ENERGY_BOOST);
+    return parts.join("\n\n");
+  }, [briefingText, selectedHub, includeVisualDna, includeBoost]);
+
+  const handleCopy = () => {
+    if (!assembled) return;
+    navigator.clipboard.writeText(assembled).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
+  const charCount = assembled.length;
+  const blockCount = [briefingText.trim(), selectedHub, includeVisualDna, includeBoost].filter(Boolean).length;
+
+  return (
+    <div
+      data-reveal
+      style={{
+        marginTop: isMobile ? "56px" : "96px",
+        borderTop: `1px solid ${BORDER}`,
+        paddingTop: isMobile ? "32px" : "48px",
+      }}
+    >
+      <div style={{ marginBottom: isMobile ? "24px" : "40px" }}>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "10px",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: TEXT_MUTED,
+            display: "block",
+            marginBottom: "12px",
+          }}
+        >
+          Briefing → Prompt
+        </span>
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 500,
+            fontSize: "clamp(28px, 4vw, 44px)",
+            letterSpacing: "-0.02em",
+            color: TEXT,
+            marginBottom: "12px",
+            lineHeight: 1.15,
+          }}
+        >
+          Briefing <em style={{ fontStyle: "italic" }}>Configurator</em>
+        </h2>
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: isMobile ? "14px" : "16px",
+            lineHeight: 1.65,
+            color: TEXT_SECONDARY,
+            maxWidth: "600px",
+          }}
+        >
+          Paste any new briefing, attach the bace building blocks, and get a ready-to-use prompt.
+        </p>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 400px",
+          gap: isMobile ? "32px" : "48px",
+          alignItems: "start",
+        }}
+      >
+        {/* ── LEFT: Input + Toggles ── */}
+        <div>
+          {/* Briefing textarea */}
+          <div style={{ marginBottom: "28px" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: TEXT_MUTED,
+                display: "block",
+                marginBottom: "10px",
+              }}
+            >
+              Paste Briefing
+            </span>
+            <textarea
+              value={briefingText}
+              onChange={(e) => setBriefingText(e.target.value)}
+              placeholder={"Paste your visual briefing here...\n\nExample:\nService: Instant Buy\nMotif: Paper shopping bag / tote bag\nFraming: Close-up, person holding bag\nFormat: 4:5 aspect ratio"}
+              style={{
+                width: "100%",
+                minHeight: isMobile ? "180px" : "220px",
+                padding: "16px",
+                fontFamily: "var(--font-mono)",
+                fontSize: "13px",
+                lineHeight: 1.7,
+                color: TEXT,
+                backgroundColor: BG,
+                border: `1px solid ${BORDER}`,
+                borderRadius: 0,
+                resize: "vertical",
+                outline: "none",
+                transition: "border-color 0.2s ease",
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = NEON_GREEN; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = BORDER; }}
+            />
+            {briefingText.trim() && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginTop: "6px",
+                }}
+              >
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: TEXT_MUTED }}>
+                  {briefingText.trim().length} chars
+                </span>
+                <button
+                  onClick={() => setBriefingText("")}
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    color: TEXT_MUTED,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                    textDecoration: "underline",
+                    textUnderlineOffset: "2px",
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Hub Type */}
+          <div style={{ marginBottom: "28px" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: TEXT_MUTED,
+                display: "block",
+                marginBottom: "10px",
+              }}
+            >
+              Hub Type <span style={{ fontWeight: 400 }}>(optional)</span>
+            </span>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
+                gap: "8px",
+              }}
+            >
+              {HUB_PRODUCTS.map((hub) => {
+                const isSelected = selectedHubId === hub.id;
+                return (
+                  <button
+                    key={hub.id}
+                    onClick={() => setSelectedHubId(isSelected ? null : hub.id)}
+                    style={{
+                      textAlign: "left",
+                      padding: "12px 14px",
+                      border: `1px solid ${isSelected ? NEON_GREEN : BORDER}`,
+                      borderLeft: isSelected ? `3px solid ${NEON_GREEN}` : `1px solid ${BORDER}`,
+                      borderRadius: 0,
+                      backgroundColor: isSelected ? "rgba(200, 230, 50, 0.06)" : BG,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "13px", fontWeight: 500, color: TEXT, display: "block", marginBottom: "2px" }}>
+                      {hub.name}
+                    </span>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "12px", color: TEXT_MUTED, fontStyle: "italic" }}>
+                      {hub.subtitle}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Modifiers */}
+          <div>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: TEXT_MUTED,
+                display: "block",
+                marginBottom: "10px",
+              }}
+            >
+              Modifiers
+            </span>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {[
+                { label: "Visual DNA", active: includeVisualDna, toggle: () => setIncludeVisualDna((v) => !v) },
+                { label: "Energy Boost", active: includeBoost, toggle: () => setIncludeBoost((v) => !v) },
+              ].map((mod) => (
+                <button
+                  key={mod.label}
+                  onClick={mod.toggle}
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "12px",
+                    letterSpacing: "0.04em",
+                    padding: "8px 18px",
+                    border: `1px solid ${mod.active ? NEON_GREEN : BORDER}`,
+                    borderRadius: 0,
+                    backgroundColor: mod.active ? NEON_GREEN : "transparent",
+                    color: mod.active ? TEXT : TEXT_MUTED,
+                    fontWeight: mod.active ? 700 : 400,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  {mod.active ? "\u2713 " : ""}{mod.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT: Live Preview ── */}
+        <div
+          style={{
+            position: isMobile ? "relative" : "sticky",
+            top: isMobile ? "auto" : "80px",
+          }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "10px",
+            }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: TEXT_MUTED }}>
+              Assembled Prompt
+            </span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: TEXT_MUTED }}>
+              {charCount > 0 ? `${charCount} chars · ${blockCount} blocks` : ""}
+            </span>
+          </div>
+
+          {/* Preview */}
+          <div
+            style={{
+              backgroundColor: BG_SUBTLE,
+              border: `1px solid ${BORDER}`,
+              padding: "16px",
+              minHeight: "300px",
+              maxHeight: isMobile ? "300px" : "520px",
+              overflowY: "auto",
+              marginBottom: "12px",
+            }}
+          >
+            {assembled.length === 0 ? (
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  color: TEXT_MUTED,
+                  lineHeight: 1.8,
+                  fontStyle: "italic",
+                }}
+              >
+                Paste a briefing on the left to start assembling your prompt...
+              </p>
+            ) : (
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  lineHeight: 1.8,
+                  color: TEXT_SECONDARY,
+                  whiteSpace: "pre-line",
+                  wordBreak: "break-word",
+                }}
+              >
+                {assembled}
+              </p>
+            )}
+          </div>
+
+          {/* Copy button */}
+          {assembled.length > 0 && (
+            <button
+              onClick={handleCopy}
+              style={{
+                width: "100%",
+                fontFamily: "var(--font-mono)",
+                fontSize: "12px",
+                letterSpacing: "0.06em",
+                fontWeight: 700,
+                padding: "14px 0",
+                border: "none",
+                cursor: "pointer",
+                backgroundColor: copied ? NEON_GREEN : DARK,
+                color: copied ? TEXT : BG,
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                if (!copied) {
+                  e.currentTarget.style.backgroundColor = NEON_GREEN;
+                  e.currentTarget.style.color = TEXT;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!copied) {
+                  e.currentTarget.style.backgroundColor = DARK;
+                  e.currentTarget.style.color = BG;
+                }
+              }}
+            >
+              {copied ? "Copied" : "Copy Full Prompt"}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Visual Briefing Component ───────────────────────────────────────────────
 
 function VisualBriefing({ isMobile }: { isMobile: boolean }) {
@@ -3329,6 +3689,9 @@ export default function PromptsPage() {
                 )}
               </div>
             </div>
+
+            {/* ── Briefing Configurator ── */}
+            <BriefingConfigurator isMobile={isMobile} />
 
             {/* ── Visual Briefing ── */}
             <VisualBriefing isMobile={isMobile} />
