@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import Image from "next/image";
 
 // ─── Atuin-inspired Design Tokens ────────────────────────────────────────────
 const TEXT = "#111111";
@@ -528,10 +529,12 @@ function SceneCard({
                     flexShrink: 0,
                   }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={src}
                     alt=""
+                    width={240}
+                    height={160}
+                    sizes="120px"
                     style={{
                       width: "100%",
                       height: "100%",
@@ -648,10 +651,12 @@ function SceneCard({
           >
             {scene.images.map((src, i) => (
               <div key={i} style={{ height: isMobile ? "160px" : "200px", overflow: "hidden" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={src}
                   alt=""
+                  width={800}
+                  height={400}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   style={{
                     width: "100%",
                     height: "100%",
@@ -885,10 +890,12 @@ export default function PromptsPage() {
           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = `drop-shadow(0 0 8px ${NEON_GREEN})`; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.filter = "none"; }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/images/bace/brand/bace-logo.png"
             alt="bace"
+            width={120}
+            height={40}
+            priority
             style={{ height: isMobile ? "28px" : "40px", width: "auto", display: "block" }}
           />
         </button>
@@ -966,6 +973,9 @@ export default function PromptsPage() {
             ref={heroImgRef}
             src={currentHero.src}
             alt=""
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             style={{
               width: "100%",
               height: "100%",
@@ -1595,10 +1605,12 @@ export default function PromptsPage() {
                                   flexShrink: 0,
                                 }}
                               >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
+                                <Image
                                   src={src}
                                   alt=""
+                                  width={240}
+                                  height={160}
+                                  sizes="120px"
                                   style={{
                                     width: "100%",
                                     height: "100%",
@@ -1720,10 +1732,12 @@ export default function PromptsPage() {
                           >
                             {hub.images.map((src, i) => (
                               <div key={i} style={{ height: isMobile ? "120px" : "280px", overflow: "hidden" }}>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
+                                <Image
                                   src={src}
                                   alt=""
+                                  width={800}
+                                  height={560}
+                                  sizes="(max-width: 768px) 50vw, 25vw"
                                   style={{
                                     width: "100%",
                                     height: "100%",
@@ -1879,10 +1893,12 @@ export default function PromptsPage() {
                         overflow: "hidden",
                       }}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={asset.image}
                         alt={asset.label}
+                        width={300}
+                        height={200}
+                        sizes="(max-width: 768px) 50vw, 200px"
                         style={{
                           maxWidth: "100%",
                           maxHeight: "100%",
@@ -2681,10 +2697,12 @@ export default function PromptsPage() {
                     >
                       {referenceImages.slice(0, 6).map((src, i) => (
                         <div key={i} style={{ height: "100px", overflow: "hidden" }}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                          <Image
                             src={src}
                             alt=""
+                            width={400}
+                            height={200}
+                            sizes="200px"
                             style={{
                               width: "100%",
                               height: "100%",
@@ -2730,10 +2748,11 @@ export default function PromptsPage() {
           }}
         >
           <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/images/bace/brand/bace-logo.png"
               alt="bace"
+              width={60}
+              height={18}
               style={{ height: "18px", width: "auto", display: "block", marginBottom: "12px", filter: "invert(1)" }}
             />
             <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.35)", lineHeight: 1.7 }}>
