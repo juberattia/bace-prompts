@@ -827,12 +827,17 @@ export default function PromptsPage() {
   const swipeCooldown = useRef(false);
 
   useEffect(() => {
-    const THRESHOLD = 80;
+    const THRESHOLD = 120;
 
     const handleWheel = (e: WheelEvent) => {
       // Only act on horizontal swipes (trackpad two-finger horizontal)
       if (Math.abs(e.deltaX) < 4 || Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
-      if (swipeCooldown.current) return;
+
+      // During cooldown, eat all events and reset accumulator so momentum doesn't queue up
+      if (swipeCooldown.current) {
+        swipeAccum.current = 0;
+        return;
+      }
 
       swipeAccum.current += e.deltaX;
 
@@ -840,7 +845,7 @@ export default function PromptsPage() {
         const direction = swipeAccum.current > 0 ? 1 : -1;
         swipeAccum.current = 0;
         swipeCooldown.current = true;
-        setTimeout(() => { swipeCooldown.current = false; }, 400);
+        setTimeout(() => { swipeCooldown.current = false; swipeAccum.current = 0; }, 800);
 
         setActiveTab((prev) => {
           const idx = tabKeys.indexOf(prev);
