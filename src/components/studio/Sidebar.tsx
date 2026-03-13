@@ -7,6 +7,7 @@ import {
   FolderKanban,
   FileText,
   Wand2,
+  Box,
   Palette,
   X,
 } from "lucide-react";
@@ -16,6 +17,7 @@ const NAV_ITEMS = [
   { href: "/projects", label: "Projects", icon: FolderKanban },
   { href: "/briefings", label: "Briefings", icon: FileText },
   { href: "/prompt-builder", label: "Prompt Builder", icon: Wand2 },
+  { href: "/viewer", label: "3D Viewer", icon: Box },
 ];
 
 interface SidebarProps {
