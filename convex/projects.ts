@@ -63,6 +63,69 @@ export const updatePhase = mutation({
   },
 });
 
+// General update mutation
+export const update = mutation({
+  args: {
+    id: v.id("projects"),
+    name: v.optional(v.string()),
+    client: v.optional(v.string()),
+    deadline: v.optional(v.number()),
+    phase: v.optional(
+      v.union(
+        v.literal("brief"),
+        v.literal("concept"),
+        v.literal("development"),
+        v.literal("handoff")
+      )
+    ),
+    description: v.optional(v.string()),
+    priority: v.optional(
+      v.union(
+        v.literal("low"),
+        v.literal("medium"),
+        v.literal("high"),
+        v.literal("urgent")
+      )
+    ),
+    tags: v.optional(v.array(v.string())),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...fields } = args;
+    const updates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(fields)) {
+      if (value !== undefined) updates[key] = value;
+    }
+    if (Object.keys(updates).length > 0) {
+      await ctx.db.patch(id, updates);
+    }
+  },
+});
+
+// Remove a project and its related tasks/briefings
+export const remove = mutation({
+  args: { id: v.id("projects") },
+  handler: async (ctx, args) => {
+    // Delete related tasks
+    const tasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_project", (q) => q.eq("projectId", args.id))
+      .collect();
+    for (const task of tasks) {
+      await ctx.db.delete(task._id);
+    }
+    // Delete related briefings
+    const briefings = await ctx.db
+      .query("briefings")
+      .withIndex("by_project", (q) => q.eq("projectId", args.id))
+      .collect();
+    for (const briefing of briefings) {
+      await ctx.db.delete(briefing._id);
+    }
+    await ctx.db.delete(args.id);
+  },
+});
+
 // Seed sample data (only if no projects exist)
 export const seed = mutation({
   args: {},
