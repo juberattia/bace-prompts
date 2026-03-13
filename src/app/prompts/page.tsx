@@ -714,6 +714,543 @@ function SceneCard({
   );
 }
 
+// ─── Visual Briefing Data ────────────────────────────────────────────────────
+
+interface BriefingService {
+  name: string;
+  motif: string;
+  detail: string;
+}
+
+const BRIEFING_SERVICES: BriefingService[] = [
+  { name: "Instant Buy", motif: "Paper shopping bag / tote bag", detail: "Local retail vibe." },
+  { name: "Click & Collect", motif: "Cardboard parcel", detail: "" },
+  { name: "One Delivery", motif: "Multiple packages", detail: "" },
+  { name: "Swap", motif: "Self-sealed parcel with tape", detail: "" },
+  { name: "Lock", motif: "Small suitcase or backpack", detail: "" },
+  { name: "Raffle", motif: "Gift box with ribbon", detail: "" },
+  { name: "Shop & Collect", motif: "Retail shopping bag with product box", detail: "" },
+  { name: "Send", motif: "Envelope / shipping bag (Versandtasche)", detail: "" },
+  { name: "Return", motif: "Box being closed / Package with return label", detail: "" },
+  { name: "bace Rent", motif: "Sports equipment, party gear, or toolbox", detail: "Focus: borrowing instead of owning. Interaction: handing the item over, picking it up or presenting it." },
+  { name: "All Parcel Services", motif: "Stack of parcels with different courier labels", detail: "" },
+];
+
+interface BriefingHeader {
+  name: string;
+  concept: string;
+  scenes: string[];
+}
+
+const BRIEFING_HEADERS: BriefingHeader[] = [
+  {
+    name: "What is bace",
+    concept: "The Hub is placed at the center of the scene as a natural focal point within the urban environment. Around it, several small everyday moments happen simultaneously.",
+    scenes: [
+      "Someone picking up a parcel",
+      "Someone placing a package into a compartment",
+      "Someone sitting nearby with coffee",
+      "People casually walking past",
+    ],
+  },
+  {
+    name: "Services",
+    concept: "People actively using the Hub.",
+    scenes: ["Opening compartments", "Scanning QR codes", "Picking up parcels"],
+  },
+  {
+    name: "About",
+    concept: "Hub integrated into an urban environment. Focus on context and atmosphere.",
+    scenes: [
+      "Founder explains the bace Hub",
+      "Smartphone in hand, bace app visible",
+      "Hub clearly visible in the background",
+      "Second person stands next to him and listens",
+    ],
+  },
+  {
+    name: "Become a Partner",
+    concept: "The Hub remains stable while the surrounding environment is in motion (motion blur). People move through the frame while the Hub stands as a fixed point.",
+    scenes: [
+      "A cyclist passing by the Hub",
+      "People walking through the scene",
+      "Blurry vehicles drive by",
+    ],
+  },
+];
+
+// ─── Visual Briefing Component ───────────────────────────────────────────────
+
+function VisualBriefing({ isMobile }: { isMobile: boolean }) {
+  const [openSection, setOpenSection] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const toggle = (id: string) => setOpenSection((prev) => (prev === id ? null : id));
+
+  const copyBlock = (id: string, text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    });
+  };
+
+  const sectionHeader = (id: string, title: string, accent: string, count?: string) => (
+    <button
+      onClick={() => toggle(id)}
+      style={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: isMobile ? "16px 0" : "20px 0",
+        background: "none",
+        border: "none",
+        borderBottom: `1px solid ${BORDER}`,
+        cursor: "pointer",
+        transition: "all 0.2s ease",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: isMobile ? "18px" : "22px",
+            fontWeight: 500,
+            color: TEXT,
+            letterSpacing: "-0.01em",
+          }}
+        >
+          {title} <em style={{ fontStyle: "italic" }}>{accent}</em>
+        </span>
+        {count && (
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: TEXT_MUTED }}>
+            {count}
+          </span>
+        )}
+      </div>
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "18px",
+          color: TEXT_MUTED,
+          transition: "transform 0.3s ease",
+          transform: openSection === id ? "rotate(45deg)" : "rotate(0deg)",
+        }}
+      >
+        +
+      </span>
+    </button>
+  );
+
+  const specBadge = (label: string) => (
+    <span
+      style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: "10px",
+        letterSpacing: "0.08em",
+        color: TEXT_SECONDARY,
+        backgroundColor: BG_SUBTLE,
+        border: `1px solid ${BORDER}`,
+        padding: "4px 10px",
+        display: "inline-block",
+      }}
+    >
+      {label}
+    </span>
+  );
+
+  // Build copyable briefing text for each section
+  const serviceBriefingText = `SERVICE VISUALS BRIEFING
+
+Concept: Each service is represented by a person interacting with a key object that visually represents the service. The object should be visually dominant in the frame.
+
+Framing: Vary perspectives — close-up, chest-up portrait, mid shot, over-shoulder shot, object-forward composition. Faces may sometimes be hidden by the object but not mandatory for every service.
+
+Format: 4:5 aspect ratio. 2–3 visual options per service.
+
+${BRIEFING_SERVICES.map((s) => `${s.name}: ${s.motif}${s.detail ? ` — ${s.detail}` : ""}`).join("\n")}`;
+
+  const headerBriefingText = `WEBSITE HEADER VISUALS BRIEFING
+
+Format: Minimum 2560 × 1440 px, 16:9 aspect ratio. Important elements near center for responsive cropping. 2–3 options per header.
+
+${BRIEFING_HEADERS.map((h) => `${h.name}\nConcept: ${h.concept}\nScenes: ${h.scenes.join(", ")}`).join("\n\n")}`;
+
+  const flyaroundBriefingText = `3D HUB FLYAROUND BRIEFING
+
+Create a 3D animation of the Hub for the website. Animation should loop smoothly for web integration.
+
+Reference: Zalando product 360° flyaround style — smooth continuous rotation, clean studio-like lighting, seamless loop.
+
+The camera orbits around the Hub at a slight angle, revealing all sides. Clean, minimal background. The animation should feel premium and editorial.`;
+
+  return (
+    <div
+      data-reveal
+      style={{
+        marginTop: isMobile ? "56px" : "96px",
+        borderTop: `1px solid ${BORDER}`,
+        paddingTop: isMobile ? "32px" : "48px",
+      }}
+    >
+      <div style={{ marginBottom: isMobile ? "24px" : "40px" }}>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "10px",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: TEXT_MUTED,
+            display: "block",
+            marginBottom: "12px",
+          }}
+        >
+          Visual Production
+        </span>
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 500,
+            fontSize: "clamp(28px, 4vw, 44px)",
+            letterSpacing: "-0.02em",
+            color: TEXT,
+            marginBottom: "12px",
+            lineHeight: 1.15,
+          }}
+        >
+          Website <em style={{ fontStyle: "italic" }}>Briefing</em>
+        </h2>
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: isMobile ? "14px" : "16px",
+            lineHeight: 1.65,
+            color: TEXT_SECONDARY,
+            maxWidth: "600px",
+          }}
+        >
+          Complete visual briefing for the bace website. Three deliverable categories — service visuals,
+          header images, and 3D flyaround. Expand each section for specs and copy the briefing.
+        </p>
+      </div>
+
+      {/* ── 1. Service Visuals ── */}
+      {sectionHeader("services", "Service", "Visuals", `${BRIEFING_SERVICES.length} services`)}
+      {openSection === "services" && (
+        <div style={{ padding: isMobile ? "20px 0" : "32px 0" }}>
+          {/* Specs row */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
+            {specBadge("4:5 ASPECT RATIO")}
+            {specBadge("2–3 OPTIONS EACH")}
+            {specBadge("VARIED FRAMING")}
+          </div>
+
+          {/* Concept */}
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: isMobile ? "13px" : "14px",
+              lineHeight: 1.7,
+              color: TEXT_SECONDARY,
+              marginBottom: "24px",
+              maxWidth: "640px",
+            }}
+          >
+            Each service is represented by a person interacting with a key object that visually represents the service.
+            The object should be visually dominant in the frame. Vary perspectives — close-up, chest-up portrait,
+            mid shot, over-shoulder, object-forward. Faces may sometimes be hidden by the object.
+          </p>
+
+          {/* Framing options */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "28px" }}>
+            {["Close-up", "Chest-up portrait", "Mid shot", "Over-shoulder", "Object-forward"].map((f) => (
+              <span
+                key={f}
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.06em",
+                  color: TEXT,
+                  backgroundColor: "rgba(200, 230, 50, 0.12)",
+                  border: `1px solid rgba(200, 230, 50, 0.3)`,
+                  padding: "5px 12px",
+                }}
+              >
+                {f}
+              </span>
+            ))}
+          </div>
+
+          {/* Service cards */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+              gap: "8px",
+              marginBottom: "24px",
+            }}
+          >
+            {BRIEFING_SERVICES.map((service) => (
+              <div
+                key={service.name}
+                style={{
+                  padding: isMobile ? "14px 16px" : "18px 20px",
+                  border: `1px solid ${BORDER}`,
+                  backgroundColor: BG,
+                  transition: "border-color 0.2s ease",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = NEON_GREEN; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = BORDER; }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: isMobile ? "14px" : "15px",
+                      fontWeight: 600,
+                      color: TEXT,
+                    }}
+                  >
+                    {service.name}
+                  </span>
+                </div>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "13px",
+                    color: TEXT_SECONDARY,
+                    display: "block",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {service.motif}
+                </span>
+                {service.detail && (
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "12px",
+                      color: TEXT_MUTED,
+                      display: "block",
+                      marginTop: "4px",
+                      lineHeight: 1.5,
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {service.detail}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Copy briefing */}
+          <button
+            onClick={() => copyBlock("services", serviceBriefingText)}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "11px",
+              letterSpacing: "0.08em",
+              padding: "10px 24px",
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: copiedId === "services" ? NEON_GREEN : DARK,
+              color: copiedId === "services" ? TEXT : BG,
+              transition: "all 0.2s ease",
+            }}
+          >
+            {copiedId === "services" ? "Copied" : "Copy Service Briefing"}
+          </button>
+        </div>
+      )}
+
+      {/* ── 2. Website Headers ── */}
+      {sectionHeader("headers", "Website", "Headers", `${BRIEFING_HEADERS.length} sections`)}
+      {openSection === "headers" && (
+        <div style={{ padding: isMobile ? "20px 0" : "32px 0" }}>
+          {/* Specs row */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
+            {specBadge("16:9 ASPECT RATIO")}
+            {specBadge("MIN 2560 × 1440 PX")}
+            {specBadge("2–3 OPTIONS EACH")}
+            {specBadge("CENTER-SAFE COMPOSITION")}
+          </div>
+
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: isMobile ? "13px" : "14px",
+              lineHeight: 1.7,
+              color: TEXT_SECONDARY,
+              marginBottom: "28px",
+              maxWidth: "640px",
+            }}
+          >
+            Hero images for website sections. Important elements should stay near the center to allow
+            responsive cropping.
+          </p>
+
+          {/* Header cards */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "24px" }}>
+            {BRIEFING_HEADERS.map((header) => (
+              <div
+                key={header.name}
+                style={{
+                  border: `1px solid ${BORDER}`,
+                  backgroundColor: BG,
+                  transition: "border-color 0.2s ease",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = NEON_GREEN; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = BORDER; }}
+              >
+                <div style={{ padding: isMobile ? "14px 16px" : "20px 24px" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: isMobile ? "16px" : "18px",
+                      fontWeight: 600,
+                      color: TEXT,
+                      display: "block",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    {header.name}
+                  </span>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "13px",
+                      lineHeight: 1.65,
+                      color: TEXT_SECONDARY,
+                      marginBottom: "12px",
+                    }}
+                  >
+                    {header.concept}
+                  </p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                    {header.scenes.map((scene) => (
+                      <span
+                        key={scene}
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "10px",
+                          letterSpacing: "0.04em",
+                          color: TEXT_SECONDARY,
+                          backgroundColor: BG_SUBTLE,
+                          border: `1px solid ${BORDER}`,
+                          padding: "4px 10px",
+                        }}
+                      >
+                        {scene}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => copyBlock("headers", headerBriefingText)}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "11px",
+              letterSpacing: "0.08em",
+              padding: "10px 24px",
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: copiedId === "headers" ? NEON_GREEN : DARK,
+              color: copiedId === "headers" ? TEXT : BG,
+              transition: "all 0.2s ease",
+            }}
+          >
+            {copiedId === "headers" ? "Copied" : "Copy Header Briefing"}
+          </button>
+        </div>
+      )}
+
+      {/* ── 3. 3D Hub Flyaround ── */}
+      {sectionHeader("flyaround", "3D Hub", "Flyaround")}
+      {openSection === "flyaround" && (
+        <div style={{ padding: isMobile ? "20px 0" : "32px 0" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
+            {specBadge("SEAMLESS LOOP")}
+            {specBadge("WEB-OPTIMIZED")}
+            {specBadge("360° ORBIT")}
+          </div>
+
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: isMobile ? "13px" : "14px",
+              lineHeight: 1.7,
+              color: TEXT_SECONDARY,
+              marginBottom: "20px",
+              maxWidth: "640px",
+            }}
+          >
+            Create a 3D animation of the Hub for the website. The camera orbits around the Hub at a slight angle,
+            revealing all sides. Clean, minimal background. Animation should loop smoothly for web integration.
+          </p>
+
+          {/* Reference link */}
+          <div
+            style={{
+              padding: isMobile ? "14px 16px" : "18px 24px",
+              border: `1px solid ${BORDER}`,
+              backgroundColor: BG_SUBTLE,
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: TEXT_MUTED,
+                flexShrink: 0,
+              }}
+            >
+              Reference
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "13px",
+                color: TEXT_SECONDARY,
+                lineHeight: 1.5,
+              }}
+            >
+              Zalando product 360° flyaround style — smooth continuous rotation, clean studio-like lighting, seamless loop.
+            </span>
+          </div>
+
+          <button
+            onClick={() => copyBlock("flyaround", flyaroundBriefingText)}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "11px",
+              letterSpacing: "0.08em",
+              padding: "10px 24px",
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: copiedId === "flyaround" ? NEON_GREEN : DARK,
+              color: copiedId === "flyaround" ? TEXT : BG,
+              transition: "all 0.2s ease",
+            }}
+          >
+            {copiedId === "flyaround" ? "Copied" : "Copy Flyaround Briefing"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 type Tab = "scenes" | "categories" | "dna" | "hardware" | "create";
@@ -2792,6 +3329,9 @@ export default function PromptsPage() {
                 )}
               </div>
             </div>
+
+            {/* ── Visual Briefing ── */}
+            <VisualBriefing isMobile={isMobile} />
           </div>
         )}
       </main>
