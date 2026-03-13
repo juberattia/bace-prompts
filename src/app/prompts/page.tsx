@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 // ─── Atuin-inspired Design Tokens ────────────────────────────────────────────
 const TEXT = "#111111";
@@ -711,7 +711,7 @@ function SceneCard({
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
-type Tab = "scenes" | "categories" | "dna" | "hardware";
+type Tab = "scenes" | "categories" | "dna" | "hardware" | "create";
 
 export default function PromptsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -719,11 +719,50 @@ export default function PromptsPage() {
   const [expandedHub, setExpandedHub] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
+  // ── Create tab state ──
+  const [createBaseType, setCreateBaseType] = useState<"scene" | "category">("scene");
+  const [createBaseId, setCreateBaseId] = useState<string | null>(null);
+  const [createHubId, setCreateHubId] = useState<string | null>(null);
+  const [createIncludeDna, setCreateIncludeDna] = useState(true);
+  const [createIncludeBoost, setCreateIncludeBoost] = useState(true);
+
+  const selectedBase = useMemo(() => {
+    if (!createBaseId) return null;
+    if (createBaseType === "scene") return CANONICAL_SCENES.find((s) => s.id === createBaseId) ?? null;
+    return MASTER_CATEGORIES.find((c) => c.id === createBaseId) ?? null;
+  }, [createBaseType, createBaseId]);
+
+  const selectedHub = useMemo(() => {
+    if (!createHubId) return null;
+    return HUB_PRODUCTS.find((h) => h.id === createHubId) ?? null;
+  }, [createHubId]);
+
+  const assembledPrompt = useMemo(() => {
+    const parts: string[] = [];
+    if (selectedHub) parts.push(selectedHub.promptBlock);
+    if (selectedBase) parts.push(selectedBase.prompt);
+    if (createIncludeDna) parts.push(VISUAL_DNA);
+    if (createIncludeBoost) parts.push(ENERGY_BOOST);
+    return parts.join("\n\n");
+  }, [selectedHub, selectedBase, createIncludeDna, createIncludeBoost]);
+
+  const referenceImages = useMemo(() => {
+    const imgs: string[] = [];
+    if (selectedBase && "images" in selectedBase) {
+      imgs.push(...(selectedBase as CanonicalScene).images);
+    }
+    if (selectedHub) {
+      imgs.push(...selectedHub.images);
+    }
+    return imgs;
+  }, [selectedBase, selectedHub]);
+
   const tabs: { key: Tab; label: string }[] = [
     { key: "scenes", label: "12 Scenes" },
     { key: "categories", label: "Master Prompts" },
     { key: "dna", label: "Visual DNA" },
     { key: "hardware", label: "Hardware" },
+    { key: "create", label: "Create" },
   ];
 
   // ── Parallax scroll for hero ──
@@ -798,6 +837,11 @@ export default function PromptsPage() {
       title: "Hardware",
       subtitle: "The bace Hub product lineup. Reference images and prompt blocks to ensure AI-generated visuals accurately represent the hardware.",
     },
+    create: {
+      src: "/images/bace/hero-hub-greenery.jpg",
+      title: "Prompt",
+      subtitle: "Assemble a complete AI image generation prompt from scenes, categories, hardware, and visual DNA. Copy and paste into nano banana pro.",
+    },
   };
 
   const heroAccents: Record<Tab, string> = {
@@ -805,6 +849,7 @@ export default function PromptsPage() {
     categories: "prompts",
     dna: "DNA",
     hardware: "reference",
+    create: "builder",
   };
 
   const currentHero = heroImages[activeTab];
@@ -1943,6 +1988,728 @@ export default function PromptsPage() {
                     </span>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB: Create ── */}
+        {activeTab === "create" && (
+          <div>
+            <h2
+              data-reveal
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 500,
+                fontSize: "clamp(28px, 4vw, 44px)",
+                letterSpacing: "-0.02em",
+                color: TEXT,
+                marginBottom: "16px",
+                lineHeight: 1.15,
+              }}
+            >
+              Prompt <em style={{ fontStyle: "italic" }}>builder</em>
+            </h2>
+            <p
+              data-reveal
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: isMobile ? "14px" : "16px",
+                lineHeight: 1.65,
+                color: TEXT_SECONDARY,
+                maxWidth: "600px",
+                marginBottom: isMobile ? "32px" : "56px",
+              }}
+            >
+              Assemble a complete prompt from your building blocks. Pick a base, choose hardware,
+              toggle modifiers, then copy the full prompt into nano banana pro.
+            </p>
+
+            <div
+              data-reveal
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 400px",
+                gap: isMobile ? "32px" : "48px",
+                alignItems: "start",
+              }}
+            >
+              {/* ── LEFT: Selectors ── */}
+              <div>
+                {/* Scene / Category switch */}
+                <div style={{ marginBottom: "24px" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "10px",
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      color: TEXT_MUTED,
+                      display: "block",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Base Prompt
+                  </span>
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      border: `1px solid ${BORDER}`,
+                      borderRadius: 0,
+                    }}
+                  >
+                    {(["scene", "category"] as const).map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => { setCreateBaseType(type); setCreateBaseId(null); }}
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "12px",
+                          letterSpacing: "0.06em",
+                          padding: "8px 20px",
+                          border: "none",
+                          borderRadius: 0,
+                          cursor: "pointer",
+                          backgroundColor: createBaseType === type ? NEON_GREEN : "transparent",
+                          color: createBaseType === type ? TEXT : TEXT_MUTED,
+                          fontWeight: createBaseType === type ? 700 : 400,
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        {type === "scene" ? "Scenes" : "Categories"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Selectable cards grid */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+                    gap: "8px",
+                    marginBottom: "32px",
+                  }}
+                >
+                  {createBaseType === "scene"
+                    ? CANONICAL_SCENES.map((scene) => {
+                        const isSelected = createBaseId === scene.id;
+                        return (
+                          <button
+                            key={scene.id}
+                            onClick={() => setCreateBaseId(isSelected ? null : scene.id)}
+                            style={{
+                              textAlign: "left",
+                              padding: isMobile ? "12px 14px" : "14px 16px",
+                              border: `1px solid ${isSelected ? NEON_GREEN : BORDER}`,
+                              borderLeft: isSelected ? `3px solid ${NEON_GREEN}` : `1px solid ${BORDER}`,
+                              borderRadius: 0,
+                              backgroundColor: isSelected ? "rgba(200, 230, 50, 0.06)" : BG,
+                              cursor: "pointer",
+                              transition: "all 0.15s ease",
+                            }}
+                          >
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: TEXT_MUTED }}>
+                                {scene.num}
+                              </span>
+                              <span
+                                style={{
+                                  fontFamily: "var(--font-display)",
+                                  fontSize: "14px",
+                                  fontWeight: 500,
+                                  color: TEXT,
+                                }}
+                              >
+                                {scene.title} <em style={{ fontStyle: "italic" }}>{scene.titleAccent}</em>
+                              </span>
+                            </div>
+                            <p
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontSize: "12px",
+                                color: TEXT_MUTED,
+                                lineHeight: 1.4,
+                                overflow: "hidden",
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                              }}
+                            >
+                              {scene.story}
+                            </p>
+                          </button>
+                        );
+                      })
+                    : MASTER_CATEGORIES.map((cat) => {
+                        const isSelected = createBaseId === cat.id;
+                        return (
+                          <button
+                            key={cat.id}
+                            onClick={() => setCreateBaseId(isSelected ? null : cat.id)}
+                            style={{
+                              textAlign: "left",
+                              padding: isMobile ? "12px 14px" : "14px 16px",
+                              border: `1px solid ${isSelected ? NEON_GREEN : BORDER}`,
+                              borderLeft: isSelected ? `3px solid ${NEON_GREEN}` : `1px solid ${BORDER}`,
+                              borderRadius: 0,
+                              backgroundColor: isSelected ? "rgba(200, 230, 50, 0.06)" : BG,
+                              cursor: "pointer",
+                              transition: "all 0.15s ease",
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontSize: "14px",
+                                fontWeight: 500,
+                                color: TEXT,
+                                display: "block",
+                                marginBottom: "4px",
+                              }}
+                            >
+                              {cat.title} <em style={{ fontStyle: "italic" }}>{cat.titleAccent}</em>
+                            </span>
+                            <p
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontSize: "12px",
+                                color: TEXT_MUTED,
+                                lineHeight: 1.4,
+                              }}
+                            >
+                              {cat.purpose}
+                            </p>
+                          </button>
+                        );
+                      })}
+                </div>
+
+                {/* Hub Type (optional) */}
+                <div style={{ marginBottom: "32px" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "10px",
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      color: TEXT_MUTED,
+                      display: "block",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Hub Type <span style={{ color: TEXT_MUTED, fontWeight: 400 }}>(optional)</span>
+                  </span>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
+                      gap: "8px",
+                    }}
+                  >
+                    {HUB_PRODUCTS.map((hub) => {
+                      const isSelected = createHubId === hub.id;
+                      return (
+                        <button
+                          key={hub.id}
+                          onClick={() => setCreateHubId(isSelected ? null : hub.id)}
+                          style={{
+                            textAlign: "left",
+                            padding: isMobile ? "12px 14px" : "14px 16px",
+                            border: `1px solid ${isSelected ? NEON_GREEN : BORDER}`,
+                            borderLeft: isSelected ? `3px solid ${NEON_GREEN}` : `1px solid ${BORDER}`,
+                            borderRadius: 0,
+                            backgroundColor: isSelected ? "rgba(200, 230, 50, 0.06)" : BG,
+                            cursor: "pointer",
+                            transition: "all 0.15s ease",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontSize: "13px",
+                              fontWeight: 500,
+                              color: TEXT,
+                              display: "block",
+                              marginBottom: "2px",
+                            }}
+                          >
+                            {hub.name}
+                          </span>
+                          <span
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontSize: "12px",
+                              color: TEXT_MUTED,
+                              fontStyle: "italic",
+                            }}
+                          >
+                            {hub.subtitle}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Modifiers */}
+                <div>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "10px",
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      color: TEXT_MUTED,
+                      display: "block",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Modifiers
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {/* Visual DNA toggle */}
+                    <button
+                      onClick={() => setCreateIncludeDna(!createIncludeDna)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                        padding: "10px 14px",
+                        border: `1px solid ${BORDER}`,
+                        borderRadius: 0,
+                        backgroundColor: BG,
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "36px",
+                          height: "20px",
+                          borderRadius: 0,
+                          backgroundColor: createIncludeDna ? NEON_GREEN : BORDER,
+                          position: "relative",
+                          transition: "background-color 0.2s ease",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "16px",
+                            height: "16px",
+                            borderRadius: 0,
+                            backgroundColor: createIncludeDna ? TEXT : BG,
+                            position: "absolute",
+                            top: "2px",
+                            left: createIncludeDna ? "18px" : "2px",
+                            transition: "left 0.2s ease, background-color 0.2s ease",
+                          }}
+                        />
+                      </div>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: "14px",
+                          color: TEXT,
+                          fontWeight: 500,
+                        }}
+                      >
+                        Visual DNA
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "10px",
+                          color: TEXT_MUTED,
+                          marginLeft: "auto",
+                        }}
+                      >
+                        {createIncludeDna ? "ON" : "OFF"}
+                      </span>
+                    </button>
+
+                    {/* Energy Boost toggle */}
+                    <button
+                      onClick={() => setCreateIncludeBoost(!createIncludeBoost)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                        padding: "10px 14px",
+                        border: `1px solid ${BORDER}`,
+                        borderRadius: 0,
+                        backgroundColor: BG,
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "36px",
+                          height: "20px",
+                          borderRadius: 0,
+                          backgroundColor: createIncludeBoost ? NEON_GREEN : BORDER,
+                          position: "relative",
+                          transition: "background-color 0.2s ease",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "16px",
+                            height: "16px",
+                            borderRadius: 0,
+                            backgroundColor: createIncludeBoost ? TEXT : BG,
+                            position: "absolute",
+                            top: "2px",
+                            left: createIncludeBoost ? "18px" : "2px",
+                            transition: "left 0.2s ease, background-color 0.2s ease",
+                          }}
+                        />
+                      </div>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: "14px",
+                          color: TEXT,
+                          fontWeight: 500,
+                        }}
+                      >
+                        Energy Boost
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "10px",
+                          color: TEXT_MUTED,
+                          marginLeft: "auto",
+                        }}
+                      >
+                        {createIncludeBoost ? "ON" : "OFF"}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── RIGHT: Preview ── */}
+              <div
+                style={{
+                  position: isMobile ? "relative" : "sticky",
+                  top: isMobile ? "auto" : "80px",
+                }}
+              >
+                <div
+                  style={{
+                    border: `1px solid ${BORDER}`,
+                    backgroundColor: BG_SUBTLE,
+                  }}
+                >
+                  {/* Preview header */}
+                  <div
+                    style={{
+                      padding: "14px 16px",
+                      borderBottom: `1px solid ${BORDER}`,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "10px",
+                        letterSpacing: "0.15em",
+                        textTransform: "uppercase",
+                        color: TEXT_MUTED,
+                      }}
+                    >
+                      Assembled Prompt
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "10px",
+                        color: TEXT_MUTED,
+                      }}
+                    >
+                      {assembledPrompt.length > 0 ? `${assembledPrompt.length} chars` : ""}
+                    </span>
+                  </div>
+
+                  {/* Prompt blocks */}
+                  <div style={{ padding: "16px", maxHeight: isMobile ? "none" : "400px", overflow: "auto" }}>
+                    {assembledPrompt.length === 0 ? (
+                      <p
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: "14px",
+                          color: TEXT_MUTED,
+                          textAlign: "center",
+                          padding: "40px 20px",
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        Select a scene or category to start building your prompt.
+                      </p>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                        {selectedHub && (
+                          <div>
+                            <span
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "9px",
+                                letterSpacing: "0.12em",
+                                textTransform: "uppercase",
+                                color: BG,
+                                backgroundColor: NEON_GREEN,
+                                padding: "2px 8px",
+                                display: "inline-block",
+                                marginBottom: "6px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              Hardware
+                            </span>
+                            <p
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontSize: "12px",
+                                lineHeight: 1.6,
+                                color: TEXT_SECONDARY,
+                                whiteSpace: "pre-line",
+                              }}
+                            >
+                              {selectedHub.promptBlock}
+                            </p>
+                          </div>
+                        )}
+
+                        {selectedBase && (
+                          <div>
+                            <span
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "9px",
+                                letterSpacing: "0.12em",
+                                textTransform: "uppercase",
+                                color: BG,
+                                backgroundColor: NEON_GREEN,
+                                padding: "2px 8px",
+                                display: "inline-block",
+                                marginBottom: "6px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              Base Prompt
+                            </span>
+                            <p
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontSize: "12px",
+                                lineHeight: 1.6,
+                                color: TEXT_SECONDARY,
+                                whiteSpace: "pre-line",
+                              }}
+                            >
+                              {selectedBase.prompt}
+                            </p>
+                          </div>
+                        )}
+
+                        {createIncludeDna && (
+                          <div>
+                            <span
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "9px",
+                                letterSpacing: "0.12em",
+                                textTransform: "uppercase",
+                                color: BG,
+                                backgroundColor: NEON_GREEN,
+                                padding: "2px 8px",
+                                display: "inline-block",
+                                marginBottom: "6px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              Visual DNA
+                            </span>
+                            <p
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontSize: "12px",
+                                lineHeight: 1.6,
+                                color: TEXT_SECONDARY,
+                                whiteSpace: "pre-line",
+                              }}
+                            >
+                              {VISUAL_DNA}
+                            </p>
+                          </div>
+                        )}
+
+                        {createIncludeBoost && (
+                          <div>
+                            <span
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "9px",
+                                letterSpacing: "0.12em",
+                                textTransform: "uppercase",
+                                color: BG,
+                                backgroundColor: NEON_GREEN,
+                                padding: "2px 8px",
+                                display: "inline-block",
+                                marginBottom: "6px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              Energy Boost
+                            </span>
+                            <p
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontSize: "12px",
+                                lineHeight: 1.6,
+                                color: TEXT_SECONDARY,
+                                fontStyle: "italic",
+                              }}
+                            >
+                              {ENERGY_BOOST}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Copy button */}
+                  {assembledPrompt.length > 0 && (
+                    <div style={{ padding: "0 16px 16px" }}>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(assembledPrompt);
+                          const btn = document.getElementById("create-copy-btn");
+                          if (btn) {
+                            btn.textContent = "Copied";
+                            btn.style.backgroundColor = NEON_GREEN;
+                            btn.style.color = TEXT;
+                            setTimeout(() => {
+                              btn.textContent = "Copy Full Prompt";
+                              btn.style.backgroundColor = DARK;
+                              btn.style.color = BG;
+                            }, 1500);
+                          }
+                        }}
+                        id="create-copy-btn"
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "12px",
+                          letterSpacing: "0.08em",
+                          fontWeight: 700,
+                          color: BG,
+                          backgroundColor: DARK,
+                          border: "none",
+                          borderRadius: 0,
+                          padding: "14px 0",
+                          cursor: "pointer",
+                          width: "100%",
+                          transition: "all 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          const btn = e.currentTarget;
+                          if (btn.textContent !== "Copied") {
+                            btn.style.backgroundColor = NEON_GREEN;
+                            btn.style.color = TEXT;
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          const btn = e.currentTarget;
+                          if (btn.textContent !== "Copied") {
+                            btn.style.backgroundColor = DARK;
+                            btn.style.color = BG;
+                          }
+                        }}
+                      >
+                        Copy Full Prompt
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Reference Images */}
+                {referenceImages.length > 0 && (
+                  <div style={{ marginTop: "16px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "10px",
+                          letterSpacing: "0.15em",
+                          textTransform: "uppercase",
+                          color: TEXT_MUTED,
+                        }}
+                      >
+                        Reference Images
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "10px",
+                          color: TEXT_MUTED,
+                        }}
+                      >
+                        Upload these as ref
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: referenceImages.length === 1 ? "1fr" : "1fr 1fr",
+                        gap: "4px",
+                      }}
+                    >
+                      {referenceImages.slice(0, 6).map((src, i) => (
+                        <div key={i} style={{ height: "100px", overflow: "hidden" }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={src}
+                            alt=""
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              display: "block",
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {referenceImages.length > 6 && (
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "10px",
+                          color: TEXT_MUTED,
+                          display: "block",
+                          marginTop: "6px",
+                        }}
+                      >
+                        +{referenceImages.length - 6} more
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
