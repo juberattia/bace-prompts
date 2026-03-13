@@ -821,6 +821,63 @@ export default function PromptsPage() {
     return () => observer.disconnect();
   }, [activeTab]);
 
+  // ── Trackpad / touch swipe to change tabs ──
+  const tabKeys = useMemo(() => tabs.map((t) => t.key), [tabs]);
+  const swipeAccum = useRef(0);
+  const swipeCooldown = useRef(false);
+
+  useEffect(() => {
+    const THRESHOLD = 80;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Only act on horizontal swipes (trackpad two-finger horizontal)
+      if (Math.abs(e.deltaX) < 4 || Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+      if (swipeCooldown.current) return;
+
+      swipeAccum.current += e.deltaX;
+
+      if (Math.abs(swipeAccum.current) >= THRESHOLD) {
+        const direction = swipeAccum.current > 0 ? 1 : -1;
+        swipeAccum.current = 0;
+        swipeCooldown.current = true;
+        setTimeout(() => { swipeCooldown.current = false; }, 400);
+
+        setActiveTab((prev) => {
+          const idx = tabKeys.indexOf(prev);
+          const next = idx + direction;
+          if (next < 0 || next >= tabKeys.length) return prev;
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return tabKeys[next];
+        });
+      }
+    };
+
+    // Touch swipe for mobile / trackpad tap-drag
+    let touchStartX = 0;
+    const handleTouchStart = (e: TouchEvent) => { touchStartX = e.touches[0].clientX; };
+    const handleTouchEnd = (e: TouchEvent) => {
+      const dx = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(dx) < 60) return;
+      const direction = dx > 0 ? 1 : -1;
+      setActiveTab((prev) => {
+        const idx = tabKeys.indexOf(prev);
+        const next = idx + direction;
+        if (next < 0 || next >= tabKeys.length) return prev;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return tabKeys[next];
+      });
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [tabKeys]);
+
   const heroImages: Record<Tab, { src: string; title: string; subtitle: string }> = {
     scenes: {
       src: "/images/bace/hero-hub-greenery.jpg",
