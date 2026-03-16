@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
+import { useStore } from "@/lib/store";
 import SectionHeader from "@/components/studio/SectionHeader";
 import StudioCard from "@/components/studio/StudioCard";
 import StatusBadge from "@/components/studio/StatusBadge";
@@ -19,8 +18,7 @@ const STATUS_FILTERS: { value: BriefingStatus | "all"; label: string }[] = [
 ];
 
 export default function BriefingsPage() {
-  const briefings = useQuery(api.briefings.list) ?? [];
-  const projects = useQuery(api.projects.list) ?? [];
+  const { briefings, projects } = useStore();
   const [statusFilter, setStatusFilter] = useState<BriefingStatus | "all">("all");
   const [search, setSearch] = useState("");
 
@@ -104,7 +102,7 @@ export default function BriefingsPage() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
           {filtered.map((briefing) => {
-            const projectName = getProjectName(briefing.projectId as string | undefined);
+            const projectName = getProjectName(briefing.projectId);
             return (
               <StudioCard key={briefing._id} hover className="space-y-2">
                 <div className="flex items-start justify-between gap-2">

@@ -1,8 +1,6 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
-import type { Id } from "../../../../../convex/_generated/dataModel";
+import { useStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import SectionHeader from "@/components/studio/SectionHeader";
@@ -14,11 +12,10 @@ import TaskList from "@/components/studio/TaskList";
 import { PHASE_COLORS, type Phase } from "@/lib/design-tokens";
 import {
   ArrowLeft,
-  Clock,
-  User,
   Calendar,
   FileText,
   Tag,
+  User,
 } from "lucide-react";
 import {
   format,
@@ -31,25 +28,15 @@ const PHASE_ORDER: Phase[] = ["brief", "concept", "development", "handoff"];
 
 export default function ProjectDetailPage() {
   const params = useParams();
-  const projectId = params.id as Id<"projects">;
+  const projectId = params.id as string;
 
-  const project = useQuery(api.projects.get, { id: projectId });
-  const tasks = useQuery(api.tasks.listByProject, { projectId }) ?? [];
-  const briefings =
-    useQuery(api.briefings.listByProject, { projectId }) ?? [];
+  const { getProject, getTasksByProject, getBriefingsByProject } = useStore();
 
-  if (project === undefined) {
-    return (
-      <div className="max-w-4xl mx-auto py-12">
-        <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-studio-border rounded w-48" />
-          <div className="h-4 bg-studio-border rounded w-32" />
-        </div>
-      </div>
-    );
-  }
+  const project = getProject(projectId);
+  const tasks = getTasksByProject(projectId);
+  const briefings = getBriefingsByProject(projectId);
 
-  if (project === null) {
+  if (!project) {
     return (
       <div className="max-w-4xl mx-auto py-12 text-center">
         <p className="text-[14px] font-mono text-studio-muted">

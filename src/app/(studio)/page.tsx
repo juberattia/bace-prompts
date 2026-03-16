@@ -1,8 +1,6 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { useEffect } from "react";
+import { useStore } from "@/lib/store";
 import Link from "next/link";
 import SectionHeader from "@/components/studio/SectionHeader";
 import StudioCard from "@/components/studio/StudioCard";
@@ -14,33 +12,15 @@ import {
   FolderKanban,
   FileText,
   Wand2,
-  Plus,
   ArrowRight,
   Clock,
 } from "lucide-react";
-import { format, formatDistanceToNow, isPast } from "date-fns";
+import { formatDistanceToNow, isPast } from "date-fns";
 
 const PHASES: Phase[] = ["brief", "concept", "development", "handoff"];
 
 export default function DashboardPage() {
-  const projects = useQuery(api.projects.list) ?? [];
-  const tasks = useQuery(api.tasks.list) ?? [];
-  const briefings = useQuery(api.briefings.list) ?? [];
-
-  // Seed data on first load
-  const seedProjects = useMutation(api.projects.seed);
-  const seedTasks = useMutation(api.tasks.seed);
-  const seedBriefings = useMutation(api.briefings.seed);
-
-  useEffect(() => {
-    seedProjects().catch(() => {});
-    // Small delay so projects exist before tasks/briefings seed
-    const t = setTimeout(() => {
-      seedTasks().catch(() => {});
-      seedBriefings().catch(() => {});
-    }, 1000);
-    return () => clearTimeout(t);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const { projects, tasks, briefings } = useStore();
 
   // Stats
   const phaseCounts = PHASES.map((phase) => ({
@@ -164,11 +144,6 @@ export default function DashboardPage() {
                   </div>
                   <PriorityBadge priority={task.priority} />
                   <StatusBadge status={task.status} />
-                  {task.dueDate && (
-                    <span className="text-[11px] font-mono text-studio-muted hidden sm:inline">
-                      {format(new Date(task.dueDate), "MMM d")}
-                    </span>
-                  )}
                 </StudioCard>
               ))
             )}

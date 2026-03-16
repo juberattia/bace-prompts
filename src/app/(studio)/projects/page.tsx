@@ -1,15 +1,13 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
-import type { Doc } from "../../../../convex/_generated/dataModel";
+import { useStore, type Project } from "@/lib/store";
 import SectionHeader from "@/components/studio/SectionHeader";
 import StudioCard from "@/components/studio/StudioCard";
 import PhaseIndicator from "@/components/studio/PhaseIndicator";
 import PriorityBadge from "@/components/studio/PriorityBadge";
 import CreateProjectForm from "@/components/studio/CreateProjectForm";
 import { PHASE_COLORS, type Phase } from "@/lib/design-tokens";
-import { format, isPast, formatDistanceToNow } from "date-fns";
+import { format, isPast } from "date-fns";
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -21,8 +19,8 @@ import {
 
 const PHASES: Phase[] = ["brief", "concept", "development", "handoff"];
 
-function ProjectCard({ project }: { project: Doc<"projects"> }) {
-  const updatePhase = useMutation(api.projects.updatePhase);
+function ProjectCard({ project }: { project: Project }) {
+  const { updateProjectPhase } = useStore();
   const [showMove, setShowMove] = useState(false);
 
   const overdue = isPast(new Date(project.deadline));
@@ -87,7 +85,7 @@ function ProjectCard({ project }: { project: Doc<"projects"> }) {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    updatePhase({ id: project._id, phase });
+                    updateProjectPhase(project._id, phase);
                     setShowMove(false);
                   }}
                   className="w-full text-left px-3 py-1.5 text-[12px] font-mono text-studio-secondary hover:bg-studio-bg hover:text-studio-text flex items-center gap-2 transition-colors"
@@ -108,7 +106,7 @@ function ProjectCard({ project }: { project: Doc<"projects"> }) {
 }
 
 export default function ProjectsPage() {
-  const projects = useQuery(api.projects.list) ?? [];
+  const { projects } = useStore();
   const [search, setSearch] = useState("");
 
   const filtered = search
@@ -147,7 +145,7 @@ export default function ProjectsPage() {
   );
 }
 
-function KanbanBoard({ projects }: { projects: Doc<"projects">[] }) {
+function KanbanBoard({ projects }: { projects: Project[] }) {
   const [activeTab, setActiveTab] = useState<Phase>("brief");
 
   const columns = PHASES.map((phase) => ({

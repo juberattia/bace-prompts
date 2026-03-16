@@ -1,19 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
-import type { Id } from "../../../../../convex/_generated/dataModel";
+import { useStore } from "@/lib/store";
 import SectionHeader from "@/components/studio/SectionHeader";
 import StudioCard from "@/components/studio/StudioCard";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Copy, Save, Check, Send } from "lucide-react";
+import type { BriefingStatus } from "@/lib/design-tokens";
 
 export default function NewBriefingPage() {
   const router = useRouter();
-  const projects = useQuery(api.projects.list) ?? [];
-  const createBriefing = useMutation(api.briefings.create);
+  const { projects, createBriefing } = useStore();
 
   const [title, setTitle] = useState("");
   const [projectId, setProjectId] = useState<string>("");
@@ -49,11 +47,11 @@ export default function NewBriefingPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSave = async (status: "draft" | "active") => {
+  const handleSave = (status: BriefingStatus) => {
     if (!title.trim()) return;
-    await createBriefing({
+    createBriefing({
       title: title.trim(),
-      projectId: projectId ? (projectId as Id<"projects">) : undefined,
+      projectId: projectId || undefined,
       projectContext: projectContext.trim() || undefined,
       targetUser: targetUser.trim() || undefined,
       constraints: constraints.trim() || undefined,
@@ -177,7 +175,7 @@ export default function NewBriefingPage() {
               <textarea
                 value={dimensions}
                 onChange={(e) => setDimensions(e.target.value)}
-                placeholder="W × D × H, tolerances..."
+                placeholder="W x D x H, tolerances..."
                 rows={2}
                 className={inputClass + " resize-none"}
               />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, Space_Mono } from "next/font/google";
 import "./globals.css";
-import { ConvexClientProvider } from "@/components/ConvexClientProvider";
+import { StudioDataProvider } from "@/lib/store";
 
 // VALIENTE® DLS — Display font: Syne (closest to GT Pressura's editorial grotesque at scale)
 const syne = Syne({
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${syne.variable} ${spaceMono.variable}`}>
       <body className="antialiased">
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <StudioDataProvider>{children}</StudioDataProvider>
       </body>
     </html>
   );

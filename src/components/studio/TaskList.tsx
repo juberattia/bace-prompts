@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import type { Id, Doc } from "../../../convex/_generated/dataModel";
+import { useStore, type Task } from "@/lib/store";
 import PriorityBadge from "./PriorityBadge";
 import StatusBadge from "./StatusBadge";
 import { format } from "date-fns";
@@ -19,8 +17,8 @@ const STATUS_LABELS: Record<TaskStatus, string> = {
 };
 
 interface TaskListProps {
-  tasks: Doc<"tasks">[];
-  projectId: Id<"projects">;
+  tasks: Task[];
+  projectId: string;
 }
 
 export default function TaskList({ tasks, projectId }: TaskListProps) {
@@ -28,14 +26,12 @@ export default function TaskList({ tasks, projectId }: TaskListProps) {
   const [newTitle, setNewTitle] = useState("");
   const [newPriority, setNewPriority] = useState<Priority>("medium");
 
-  const createTask = useMutation(api.tasks.create);
-  const updateTask = useMutation(api.tasks.update);
-  const removeTask = useMutation(api.tasks.remove);
+  const { createTask, updateTask, removeTask } = useStore();
 
-  const handleAdd = async (e: React.FormEvent) => {
+  const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim()) return;
-    await createTask({
+    createTask({
       projectId,
       title: newTitle.trim(),
       priority: newPriority,
@@ -44,10 +40,10 @@ export default function TaskList({ tasks, projectId }: TaskListProps) {
     setShowAdd(false);
   };
 
-  const cycleStatus = async (task: Doc<"tasks">) => {
+  const cycleStatus = (task: Task) => {
     const currentIdx = STATUS_ORDER.indexOf(task.status);
     const nextStatus = STATUS_ORDER[(currentIdx + 1) % STATUS_ORDER.length];
-    await updateTask({ id: task._id, status: nextStatus });
+    updateTask(task._id, { status: nextStatus });
   };
 
   const grouped = STATUS_ORDER.map((status) => ({
@@ -110,7 +106,7 @@ export default function TaskList({ tasks, projectId }: TaskListProps) {
                     </span>
                   )}
                   <button
-                    onClick={() => removeTask({ id: task._id })}
+                    onClick={() => removeTask(task._id)}
                     className="opacity-0 group-hover:opacity-100 p-1 text-studio-muted hover:text-red-500 transition-all"
                   >
                     <Trash2 size={13} />

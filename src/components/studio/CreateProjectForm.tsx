@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { useStore } from "@/lib/store";
 import {
   Dialog,
   DialogContent,
@@ -37,18 +36,20 @@ export default function CreateProjectForm() {
   const [deadline, setDeadline] = useState("");
   const [tags, setTags] = useState("");
 
-  const createProject = useMutation(api.projects.create);
+  const { createProject } = useStore();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !client.trim()) return;
 
-    await createProject({
+    createProject({
       name: name.trim(),
       client: client.trim(),
       deadline: deadline ? new Date(deadline).getTime() : Date.now() + 30 * 24 * 60 * 60 * 1000,
       phase,
+      priority,
       description: description.trim() || undefined,
+      tags: tags.trim() ? tags.split(",").map((t) => t.trim()).filter(Boolean) : undefined,
     });
 
     setName("");
