@@ -8,6 +8,8 @@ import {
   FileText,
   Wand2,
   Box,
+  Sparkles,
+  ImageIcon,
   Palette,
   X,
 } from "lucide-react";
@@ -18,6 +20,8 @@ const NAV_ITEMS = [
   { href: "/briefings", label: "Briefings", icon: FileText },
   { href: "/prompt-builder", label: "Prompt Builder", icon: Wand2 },
   { href: "/viewer", label: "3D Viewer", icon: Box },
+  { href: "/image-gen", label: "Nano Banana 2", icon: Sparkles },
+  { href: "/library", label: "Image Library", icon: ImageIcon },
 ];
 
 interface SidebarProps {

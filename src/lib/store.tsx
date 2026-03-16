@@ -52,6 +52,18 @@ export interface Briefing {
   createdAt: number;
 }
 
+export type ImageSource = "generated" | "uploaded";
+
+export interface LibraryImage {
+  _id: string;
+  dataUrl: string;
+  prompt?: string;
+  source: ImageSource;
+  tags: string[];
+  fileName?: string;
+  createdAt: number;
+}
+
 // ─── ID generator ───────────────────────────────────────────────────────────
 
 let counter = 0;
@@ -66,6 +78,7 @@ const KEYS = {
   projects: "studio-projects",
   tasks: "studio-tasks",
   briefings: "studio-briefings",
+  images: "studio-images",
   seeded: "studio-seeded",
 } as const;
 
@@ -181,6 +194,14 @@ interface StoreContextValue {
   updateBriefing: (id: string, data: Partial<Omit<Briefing, "_id" | "createdAt">>) => void;
   updateBriefingStatus: (id: string, status: BriefingStatus) => void;
   removeBriefing: (id: string) => void;
+
+  // Images
+  images: LibraryImage[];
+  saveImage: (data: { dataUrl: string; prompt?: string; source: ImageSource; tags?: string[]; fileName?: string }) => string;
+  removeImage: (id: string) => void;
+  getGeneratedImages: () => LibraryImage[];
+  getUploadedImages: () => LibraryImage[];
+  imageStorageWarning: boolean;
 }
 
 const StoreContext = createContext<StoreContextValue | null>(null);
@@ -197,11 +218,13 @@ export function StudioDataProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [briefings, setBriefings] = useState<Briefing[]>([]);
+  const [images, setImages] = useState<LibraryImage[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   // Load from localStorage on mount, seed if needed
   useEffect(() => {
     const seeded = localStorage.getItem(KEYS.seeded);
+    setImages(load<LibraryImage>(KEYS.images));
     if (seeded) {
       setProjects(load<Project>(KEYS.projects));
       setTasks(load<Task>(KEYS.tasks));
@@ -229,6 +252,9 @@ export function StudioDataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (loaded) save(KEYS.briefings, briefings);
   }, [briefings, loaded]);
+  useEffect(() => {
+    if (loaded) save(KEYS.images, images);
+  }, [images, loaded]);
 
   // ─── Project operations ─────────────────────────────────────────────────
 
@@ -358,6 +384,45 @@ export function StudioDataProvider({ children }: { children: ReactNode }) {
     []
   );
 
+  // ─── Image operations ───────────────────────────────────────────────
+
+  const saveImage = useCallback(
+    (data: { dataUrl: string; prompt?: string; source: ImageSource; tags?: string[]; fileName?: string }) => {
+      const id = genId();
+      const image: LibraryImage = {
+        _id: id,
+        dataUrl: data.dataUrl,
+        prompt: data.prompt,
+        source: data.source,
+        tags: data.tags ?? [],
+        fileName: data.fileName,
+        createdAt: Date.now(),
+      };
+      setImages((prev) => [image, ...prev]);
+      return id;
+    },
+    []
+  );
+
+  const removeImage = useCallback(
+    (id: string) => {
+      setImages((prev) => prev.filter((img) => img._id !== id));
+    },
+    []
+  );
+
+  const getGeneratedImages = useCallback(
+    () => images.filter((img) => img.source === "generated"),
+    [images]
+  );
+
+  const getUploadedImages = useCallback(
+    () => images.filter((img) => img.source === "uploaded"),
+    [images]
+  );
+
+  const imageStorageWarning = images.length >= 50;
+
   // ─── Context value ──────────────────────────────────────────────────
 
   const value: StoreContextValue = {
@@ -378,6 +443,12 @@ export function StudioDataProvider({ children }: { children: ReactNode }) {
     updateBriefing,
     updateBriefingStatus,
     removeBriefing,
+    images,
+    saveImage,
+    removeImage,
+    getGeneratedImages,
+    getUploadedImages,
+    imageStorageWarning,
   };
 
   return (

@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import SectionHeader from "@/components/studio/SectionHeader";
 import StudioCard from "@/components/studio/StudioCard";
+import { useStore } from "@/lib/store";
 import {
   RENDER_STYLES,
   MATERIALS,
@@ -12,7 +14,7 @@ import {
   MODIFIERS,
   type PromptOption,
 } from "@/lib/prompt-builder-data";
-import { Copy, Check, RotateCcw } from "lucide-react";
+import { Copy, Check, RotateCcw, Sparkles, Upload, X, ImageIcon } from "lucide-react";
 
 function SelectableCards({
   title,
@@ -63,6 +65,9 @@ function SelectableCards({
 }
 
 export default function PromptBuilderPage() {
+  const router = useRouter();
+  const { saveImage, getUploadedImages, removeImage } = useStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [productDescription, setProductDescription] = useState("");
   const [style, setStyle] = useState<string[]>([]);
   const [material, setMaterial] = useState<string[]>([]);
@@ -71,6 +76,46 @@ export default function PromptBuilderPage() {
   const [environment, setEnvironment] = useState<string[]>([]);
   const [modifiers, setModifiers] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const uploadedImages = getUploadedImages();
+
+  const handleFileUpload = useCallback(
+    (files: FileList | null) => {
+      if (!files) return;
+      Array.from(files).forEach((file) => {
+        if (!file.type.startsWith("image/")) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          saveImage({
+            dataUrl: reader.result as string,
+            source: "uploaded",
+            fileName: file.name,
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+    [saveImage]
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      handleFileUpload(e.dataTransfer.files);
+    },
+    [handleFileUpload]
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback(() => {
+    setIsDragging(false);
+  }, []);
 
   const toggleSingle = (
     setter: React.Dispatch<React.SetStateAction<string[]>>
@@ -239,23 +284,37 @@ export default function PromptBuilderPage() {
             )}
           </StudioCard>
 
-          <button
-            onClick={handleCopy}
-            disabled={!prompt}
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-studio-text text-white rounded-md text-[13px] font-mono hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {copied ? (
-              <>
-                <Check size={15} />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy size={15} />
-                Copy Prompt
-              </>
-            )}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleCopy}
+              disabled={!prompt}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-studio-text text-white rounded-md text-[13px] font-mono hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {copied ? (
+                <>
+                  <Check size={15} />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy size={15} />
+                  Copy
+                </>
+              )}
+            </button>
+            <button
+              onClick={() =>
+                router.push(
+                  `/image-gen?prompt=${encodeURIComponent(prompt)}`
+                )
+              }
+              disabled={!prompt}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 border border-studio-border rounded-md text-[13px] font-mono text-studio-secondary hover:border-studio-neon hover:text-studio-text transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Sparkles size={15} />
+              Generate
+            </button>
+          </div>
 
           {/* Selection summary */}
           {(style.length > 0 ||
@@ -306,6 +365,69 @@ export default function PromptBuilderPage() {
               )}
             </div>
           )}
+
+          {/* Reference Images */}
+          <div className="pt-3 border-t border-studio-border space-y-2">
+            <h4 className="text-[10px] font-mono text-studio-muted uppercase tracking-wider">
+              Reference Images
+            </h4>
+
+            {/* Upload area */}
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              className={`border-2 border-dashed rounded-md p-4 text-center transition-colors cursor-pointer ${
+                isDragging
+                  ? "border-studio-neon bg-studio-neon/5"
+                  : "border-studio-border hover:border-studio-neon/50"
+              }`}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload size={16} className="mx-auto text-studio-muted mb-1" />
+              <p className="text-[11px] font-mono text-studio-muted">
+                Drop images or click to upload
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={(e) => handleFileUpload(e.target.files)}
+              />
+            </div>
+
+            {/* Uploaded reference thumbnails */}
+            {uploadedImages.length > 0 && (
+              <div className="grid grid-cols-3 gap-1.5">
+                {uploadedImages.map((img) => (
+                  <div
+                    key={img._id}
+                    className="relative aspect-square rounded overflow-hidden border border-studio-border group"
+                  >
+                    <img
+                      src={img.dataUrl}
+                      alt={img.fileName ?? "Reference"}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={() => removeImage(img._id)}
+                      className="absolute top-0.5 right-0.5 p-0.5 bg-black/60 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {uploadedImages.length === 0 && (
+              <p className="text-[10px] font-mono text-studio-muted/60">
+                No references yet. Upload inspiration images.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
