@@ -40,7 +40,7 @@ const LIFESTYLE_SCENES: BaceScene[] = [
 
 Low angle, camera at hip height tilted 10 degrees upward. Hasselblad X2D 100C, XCD 38mm f/2.5, bright overcast daylight — flat diffused light from high white sky creating even illumination with NO harsh shadows, 5800K neutral color temperature. Medium format tonal richness. The hub and people feel monumental from this low perspective.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY, white/cream, locker grid intact) DIRECTLY on cobblestone at Viktualienmarkt, Munich. NO concrete foundation. NO pedestal. The hub's bottom edge meets the cobblestone surface directly — gaps between hub base and uneven stones visible.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY, light grey metallic, locker grid intact) DIRECTLY on cobblestone at Viktualienmarkt, Munich. NO concrete foundation. NO pedestal. The hub's bottom edge meets the cobblestone surface directly — gaps between hub base and uneven stones visible.
 
 FOREGROUND: Cobblestone surface in sharp focus at the very bottom of frame — individual stones, moss in gaps, a crushed chestnut, a bicycle tire track in morning dew. The ground plane creates a strong leading line to the hub.
 
@@ -142,12 +142,12 @@ NOT pretty. GRAPHIC. The window-layer creates an Apartamento Magazine editorial 
 
 Dutch tilt — camera rotated 15 degrees clockwise creating diagonal energy through the frame. Leica M11, Summilux 35mm f/1.4, direct midday sun at 5400K creating HARD graphic shadows on pavement — sharp-edged shadow shapes of people and hub on the ground. High contrast between sunlit surfaces and deep shadow areas. Leica rangefinder rendering with punchy mid-tones.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY) on Bergmannstrasse in Berlin-Kreuzberg. NO concrete foundation — hub sits directly on the asphalt/stone pavement, hard noon shadow beneath it creating a clean dark line. The midday sun hits the hub's white surface directly — making it almost glow against the shadowed areas.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY) on Bergmannstrasse in Berlin-Kreuzberg. NO concrete foundation — hub sits directly on the asphalt/stone pavement, hard noon shadow beneath it creating a clean dark line. The midday sun hits the hub's light grey metallic surface directly — making it almost glow against the shadowed areas.
 
 FOREGROUND: A hard shadow on the pavement — the geometric shadow shape of a street sign and a bicycle, creating a graphic dark pattern across the bottom of the tilted frame. One shadow merges with a person's shadow.
 
 MIDGROUND — THE HUB + PEOPLE:
-Frame 3 friends (age 26-30) in a burst of celebration, the Dutch tilt amplifying their motion energy. An East Asian woman (shoulder-length black hair, blunt bangs mid-swing) in oversized lavender hoodie, black wide-leg trousers, chunky white platform sneakers — mid-thrust lifting a premium product box above her shoulder with one hand, the other gripping her phone, weight shifting to toes, head thrown back mid-laugh, mouth open, eyes squeezed. The midday sun creates a hard shadow of her raised arm on the hub's white surface behind her.
+Frame 3 friends (age 26-30) in a burst of celebration, the Dutch tilt amplifying their motion energy. An East Asian woman (shoulder-length black hair, blunt bangs mid-swing) in oversized lavender hoodie, black wide-leg trousers, chunky white platform sneakers — mid-thrust lifting a premium product box above her shoulder with one hand, the other gripping her phone, weight shifting to toes, head thrown back mid-laugh, mouth open, eyes squeezed. The midday sun creates a hard shadow of her raised arm on the hub's light grey metallic surface behind her.
 
 A tall Black man (short-cropped hair, sharp jawline lit harshly by overhead sun creating defined cheekbone shadows) in structured olive bomber and black jeans — both arms mid-raise, fingers spread, mid-shout, leaning toward her. A German woman (light brown hair escaping a messy bun, forehead slightly shiny in the direct sun) in striped Breton top and high-waisted jeans — mid-pivot, phone at arm's length recording, one foot off ground, squinting slightly in the bright light.
 
@@ -322,7 +322,7 @@ NOT aspirational. SPATIAL AND CLEAR. The Monocle Magazine urban-planning perspec
 
 Low angle at knee height, aimed partly at a rain puddle on the pavement — the BACE hub and people are visible BOTH directly and REFLECTED in the wet surface, creating a mirrored composition. Hasselblad X2D 100C, XCD 90mm f/2.5, post-rain light — clouds breaking with a bright white area, 5600K, wet surfaces reflecting the luminous sky. Medium format shallow plane of focus isolates the reflection in sharp focus while the real subjects above are also sharp. The wet ground makes everything more graphic.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY) on a side street off Leopoldstrasse in Munich-Schwabing. NO concrete foundation — hub sits directly on wet pavement. The puddle sits between camera and hub, reflecting the hub's white surface and the people around it. The hub looks crisp and architectural reflected in still water.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY) on a side street off Leopoldstrasse in Munich-Schwabing. NO concrete foundation — hub sits directly on wet pavement. The puddle sits between camera and hub, reflecting the hub's light grey metallic surface and the people around it. The hub looks crisp and architectural reflected in still water.
 
 FOREGROUND: The puddle surface — still water reflecting a mirror image of the hub and sky. Small ripples at the puddle edge from a recent footstep. A fallen leaf floats at the puddle's periphery. The wet pavement around the puddle has a dark, saturated sheen that makes everything more graphic.
 
@@ -358,7 +358,7 @@ Camera positioned BEHIND the BACE hub — the hub's rear corner and edge visible
 
 Position a BACE hub (from uploaded reference — reproduce EXACTLY) at the edge of a weekend street market in Cologne-Ehrenfeld. NO concrete foundation — hub sits directly on cobblestone. Camera is BEHIND the hub, so the rear surface of the hub is visible as a structural frame element — showing the hub's back panel, any wiring conduit, the real industrial backside. This angle is unexpected and honest.
 
-FOREGROUND: The hub's rear left corner — sharp, vertical, cream/white — acting as a compositional frame. The hub's back surface texture visible at close range: industrial material, mounting hardware, a small ventilation grille. This architectural element anchors the left side while the market scene fills the right 80%.
+FOREGROUND: The hub's rear left corner — sharp, vertical, light grey metallic — acting as a compositional frame. The hub's back surface texture visible at close range: industrial material, mounting hardware, a small ventilation grille. This architectural element anchors the left side while the market scene fills the right 80%.
 
 MIDGROUND — THE MARKET + PEOPLE:
 Frame 6 diverse people across the market, with some wrapping around to the hub's visible front side. MAIN GROUP (3) visible at the hub's front edge (camera looking past the hub's corner to see them at the locker face): A Black man (age 28, cream fisherman beanie, olive utility jacket) — mid-receive of a kraft package, both hands on it, tilting to read the label. A Korean-German woman (age 26, straight black hair, small silver hoops) in pastel pink oversized blazer over white tee — one hand mid-scroll on the hub interface, head forward with focused interest. A German woman (age 31, short dark pixie cut, small tattoo behind ear) in burgundy turtleneck and black wide-leg trousers — mid-sip of an oat-milk latte, weight on one hip.
@@ -430,7 +430,7 @@ NOT a group portrait. NOT arranged. OBSERVED from a distance. Saul Leiter meets 
 
 Extreme close-up — frame TIGHT on hands, phone, and the hub's locker surface. NO full face — only the jaw, chin, and lower cheek of the subject enter the top of frame. Hasselblad X2D 100C, XCD 90mm f/2.5, bright overcast at 6000K — flat, honest, texture-revealing light with no directional bias. Medium format resolves extraordinary detail at this close range — individual skin pores, phone screen pixels, metal locker seam lines.
 
-Position the BACE hub locker face (from uploaded reference — reproduce EXACTLY, locker grid sharp) filling the RIGHT HALF of the frame as a flat surface. The hub's white/cream surface acts as a minimalist background. NO concrete foundation visible in this tight crop.
+Position the BACE hub locker face (from uploaded reference — reproduce EXACTLY, locker grid sharp) filling the RIGHT HALF of the frame as a flat surface. The hub's light grey metallic surface acts as a minimalist background. NO concrete foundation visible in this tight crop.
 
 FOREGROUND: The subject's hand — fingers curled around an open locker door edge, pulling. Extreme detail: individual knuckle creases, a short-filed nail, a tiny scar on the index finger, the shadow between fingers. The hand has natural melanin variation, visible tendons, and warm brown skin. Her other hand enters from the left edge gripping an iPhone, its screen casting a cool blue-white glow on the locker surface.
 
@@ -539,7 +539,7 @@ NOT romantic. NOT styled. ORDINARY and GOOD. The way i-D shoots a real couple on
 
 Clean profile angle — camera placed perfectly perpendicular to the hub's locker face, shooting the subject in exact SIDE PROFILE. Fuji GFX 100S, GF 80mm f/1.7 at f/2.0, direct midday sun from almost directly above at 5400K — creating strong top-down shadows under his brow ridge, nose, and chin. Graphic, sculptural, like a portrait on a coin. The medium format at f/2.0 holds his profile sharp while the hub's locker grid behind him stays detailed and the background falls to creamy Fuji-color bokeh.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY) against a building wall on a residential street in Munich-Glockenbach, near the Glockenbach canal. NO concrete foundation — hub sits directly on sidewalk paving stones. The hub's locker face is the BACKGROUND SURFACE — its white grid fills the right two-thirds of the frame, the subject's dark profile silhouetted against it.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY) against a building wall on a residential street in Munich-Glockenbach, near the Glockenbach canal. NO concrete foundation — hub sits directly on sidewalk paving stones. The hub's locker face is the BACKGROUND SURFACE — its light grey metallic grid fills the right two-thirds of the frame, the subject's dark profile silhouetted against it.
 
 FOREGROUND: The taut leash — a tan leather leash stretching from the subject's left hand (closest to camera) diagonally DOWN and OUT of frame bottom-left, creating a strong compositional line. The leash leads to a bollard just out of frame where the dog waits. The leash has a slight curve, tension visible. A set of keys hangs from his belt loop, catching a flash of overhead light.
 
@@ -548,7 +548,7 @@ A South Asian man (age 30, clean-shaven, strong profile — straight nose, defin
 
 The dog is PARTLY visible — just the front half entering the bottom-left corner of frame: a medium-sized mixed breed, tan and white, sitting attentively, ears forward, nose pointed toward him. The leash connects them diagonally across the frame.
 
-BACKGROUND: The hub's locker grid as immediate background — crisp white geometric pattern against which his dark profile is graphic. Beyond the hub's edge (left side of frame): Glockenbach streetscape in Fuji bokeh — a canal railing, plane trees with dappled canopy, a pastel-painted building facade, a small bridge. The midday sun creates a bright zone beyond the hub's shade. A distant cyclist.
+BACKGROUND: The hub's locker grid as immediate background — crisp light grey metallic geometric pattern against which his dark profile is graphic. Beyond the hub's edge (left side of frame): Glockenbach streetscape in Fuji bokeh — a canal railing, plane trees with dappled canopy, a pastel-painted building facade, a small bridge. The midday sun creates a bright zone beyond the hub's shade. A distant cyclist.
 
 STRATEGIC IMPERFECTION: Fuji GFX grain — film-like, warm-neutral, organic. The direct overhead sun creates unflattering but REAL shadows — a strong shadow under his brow makes his eyes slightly recessed, a dark triangle under his nose, a chin shadow on his neck. This is NOT fashion lighting — this is noon. His tee shirt has a subtle fade line at the collar from sun exposure. The Gazelles have a scuff on the outer edge and the toe cap has a faint grass stain. His forearm has natural hair catching the sun. The leather leash is worn smooth at the grip point, slightly darker from hand oil. The dog's fur has natural direction changes and one ear is slightly higher than the other. The locker grid behind him has a small fingerprint smudge on one door. The bollard where the leash loops has a sticker remnant scraped half off. Paving stones have one slightly raised — a trip hazard. Keys on belt loop are jumbled, not organized.
 
@@ -643,7 +643,7 @@ NOT a phone ad. NOT a lifestyle shoot. A STREET MOMENT caught by someone with a 
 
 Straight front-facing at eye level — camera directly facing the subject, his eyes looking almost into the lens (but slightly past it, at the locker). Hasselblad X2D 100C, XCD 55mm f/2.5 at f/3.5, overcast rain at 6500K — the coolest, greyest light in this entire set. Flat, directionless, wet. Rain falling as fine mist, barely visible but making everything damp and reflective. Medium format handles the low-contrast scene with tonal richness that prevents it from looking flat.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY) on a narrow side street in Hamburg-Schanzenviertel. NO concrete foundation — hub directly on wet cobblestone, small puddles around its base reflecting the white of its surface. Rain beads on the hub's exterior — tiny water droplets on the cream/white surface.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY) on a narrow side street in Hamburg-Schanzenviertel. NO concrete foundation — hub directly on wet cobblestone, small puddles around its base reflecting the light grey of its surface. Rain beads on the hub's exterior — tiny water droplets on the light grey metallic surface.
 
 FOREGROUND: Rain in the air — fine mist visible against the darker background, slightly out of focus, creating a textural veil between camera and subject. A few larger drops caught mid-fall. Wet cobblestone in the very bottom of frame reflecting ambient light.
 
@@ -652,7 +652,7 @@ A Middle Eastern man (age 29, short dark beard trimmed close, warm olive skin wi
 
 He is mid-place of a portable projector (a small black rectangular device) INTO an open locker — his right hand guiding it onto the shelf, his left hand on the locker door ready to close. His expression is the KEY: closed-lip SMILE, genuine, warm, eyes soft and slightly crinkled at the corners. He is still thinking about last night — the movie, the friends, the laughter. The rain doesn't touch his mood. His beard has fine rain mist in it, catching the grey light.
 
-The hub's white surface has rain beads and small running water tracks. The locker interior is dry — the contrast between wet exterior and dry interior tells the story of protection.
+The hub's light grey metallic surface has rain beads and small running water tracks. The locker interior is dry — the contrast between wet exterior and dry interior tells the story of protection.
 
 BACKGROUND: Schanzenviertel in the rain — colorful building facades (teal, dusty pink, cream) made MORE vivid by the wet grey light. Rain-dark cobblestone reflects the building colors as smeared vertical reflections. A red umbrella carried by a pedestrian in the far background is the ONLY color accent beyond the facades. A cafe with steamed-up windows. The narrow street perspective creates depth.
 
@@ -715,7 +715,7 @@ NOT a cycling ad. NOT a lifestyle brand shot. A WOMAN ON A BIKE doing her errand
 
 Wide composition with deliberate NEGATIVE SPACE — subjects and hub in the right 60% of frame, the left 40% is empty tree-lined sidewalk and Altbau facade, creating editorial breathing room. Fuji GFX 100S, GF 50mm f/3.5 at f/4.0, dappled tree shade — direct midday sun at 5400K filtered through a plane tree's canopy, creating a shifting mosaic of bright spots and leaf-shadow patterns on the subjects, the hub, and the ground. The medium format renders the dappled light beautifully — bright spots slightly blown, shadows richly detailed.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY) on a sidewalk in Cologne Belgisches Viertel beneath a plane tree. NO concrete foundation — hub directly on pavement. The tree-shade pattern falls across the hub's white surface — a moving graphic of light and shadow.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY) on a sidewalk in Cologne Belgisches Viertel beneath a plane tree. NO concrete foundation — hub directly on pavement. The tree-shade pattern falls across the hub's light grey metallic surface — a moving graphic of light and shadow.
 
 FOREGROUND: Empty sidewalk stretching left — clean, spacious, a few scattered dry leaves, the shadow of the plane tree trunk creating a strong dark diagonal. A cafe's sandwich board sign at the far left edge, slightly cropped. The empty space is NOT dead — it is compositional rest, editorial luxury.
 
@@ -823,7 +823,7 @@ NOT a mother-and-baby ad. NOT aspirational parenting. A REAL NEW MOM doing a rea
 
 Tight medium framing — cropped from mid-chest to just above the head, leaving no wasted space. The vinyl record held at chest height creates a FLAT GRAPHIC RECTANGLE in the composition, its cover art becoming a design element. Leica M11, Summilux 50mm f/1.4 at f/1.4 wide open, bright overcast at 5800K with one concentrated sun-break beam hitting his hands and the record, creating a natural spotlight effect. The extreme shallow depth of field at f/1.4 makes his face sharp while the hub behind him becomes a soft white plane.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY) directly behind the subject — the hub's locker grid visible as a soft white geometric pattern filling the background. NO concrete foundation — hub on Ehrenfeld sidewalk. One locker is open — the one he just took the record from.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY) directly behind the subject — the hub's locker grid visible as a soft light grey metallic geometric pattern filling the background. NO concrete foundation — hub on Ehrenfeld sidewalk. One locker is open — the one he just took the record from.
 
 FOREGROUND: The vinyl record itself — he holds it with BOTH HANDS at chest height, face-out, slightly tilted, the album art visible. His thumbs grip the top edge, fingers underneath. The record is in its shrink-wrap — the cellophane catching and refracting the light beam. The record's edge and his hands are in the critical focus plane.
 
@@ -832,7 +832,7 @@ A white German man (age 27, curly medium-brown hair slightly longer on top, a fe
 
 His face — IN SHARP FOCUS — tells the story: eyes slightly widened, reading the tracklist on the record's back (his eyes are directed DOWN at the record, not at camera), mouth slightly open in a "yes" expression, the onset of a broad grin pulling at the corners of his mouth. One eyebrow is raised higher than the other. He is tilting the record to catch light on the text. This is a deeply personal, nerdy, specific joy — not performative, not for anyone watching.
 
-BACKGROUND: The hub's locker grid in extreme f/1.4 bokeh — the white rectangles become soft glowing shapes. The open locker is a darker rectangle with soft edges. Beyond the hub, Ehrenfeld blurs into abstract color: a street art mural becomes a wash of teal and ochre. A shop sign becomes unreadable warm shapes. The Leica bokeh is characteristically smooth with just a hint of swirl at the edges.
+BACKGROUND: The hub's locker grid in extreme f/1.4 bokeh — the grey metallic rectangles become soft glowing shapes. The open locker is a darker rectangle with soft edges. Beyond the hub, Ehrenfeld blurs into abstract color: a street art mural becomes a wash of teal and ochre. A shop sign becomes unreadable warm shapes. The Leica bokeh is characteristically smooth with just a hint of swirl at the edges.
 
 STRATEGIC IMPERFECTION: Leica M11 grain — present, characterful, especially in the sweatshirt's dark burgundy tones. The sun-break beam on the record creates a localized warmth on his hands — a REAL natural spotlight, not artificial. His curly hair has individual curls going in different directions, one with a slight knot at the end. The stubble is genuinely patchy — thinner on the cheeks, denser on the chin, a gap below the left sideburn. The sweatshirt is pilled at the ribbed cuff. The tattoo is slightly faded — NOT fresh, a few years old. His fingernails are short, one thumbnail has a tiny hangnail. The vinyl's shrink-wrap has a small tear at one corner where he couldn't resist checking. The record has a price sticker on the cellophane — a small round sticker with hand-written "12,50." The open locker behind him has a small scuff at the base. One curl of his hair crosses his forehead slightly, catching the Leica's micro-contrast.
 
@@ -857,9 +857,9 @@ NOT a record-label promo. NOT a brand lifestyle shot. A GUY who got the record h
 
 Straight back-to-camera angle — both subjects walking AWAY, their backs filling the center of frame, heading down the street TOWARD the sunlight. The hub is BEHIND them (and behind the camera's position), visible in the scene because the camera is positioned between the hub and the departing subjects. Fuji GFX 100S, GF 50mm f/3.5 at f/4.0, direct afternoon sun at 5200K hitting the subjects from AHEAD — they walk into the light, their backs catching sun on shoulders and hair edges, the sidewalk ahead of them bright. The camera is in the hub's shadow zone. This front-lit departure creates an optimistic, forward energy.
 
-Position a BACE hub (from uploaded reference — reproduce EXACTLY) behind the camera position — visible only at the frame EDGES as a blurred white shape entering the bottom-left corner and a white reflection in a shop window. NO concrete foundation. The hub is a receding context, not the subject. The subjects are LEAVING it.
+Position a BACE hub (from uploaded reference — reproduce EXACTLY) behind the camera position — visible only at the frame EDGES as a blurred grey metallic shape entering the bottom-left corner and a grey reflection in a shop window. NO concrete foundation. The hub is a receding context, not the subject. The subjects are LEAVING it.
 
-FOREGROUND: The hub's presence — a soft white blur at the very bottom-left of frame (its corner) and its reflection faintly visible in a parked car's window. This minimal presence says "they were just here." A few cobblestones in detail at the very bottom of frame.
+FOREGROUND: The hub's presence — a soft grey metallic blur at the very bottom-left of frame (its corner) and its reflection faintly visible in a parked car's window. This minimal presence says "they were just here." A few cobblestones in detail at the very bottom of frame.
 
 MIDGROUND — THE TWO FRIENDS (from behind):
 A South Asian woman (age 28, long dark hair loose down her back, swinging slightly with her stride, henna-brown highlights catching the sunlight) and a Black man (age 30, short natural hair, the back of his neck showing a subtle skin-fade line). Both seen from behind, full-length.

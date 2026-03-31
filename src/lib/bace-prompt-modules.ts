@@ -529,13 +529,13 @@ const BACE_HUB: PromptModuleCategory = {
       id: "standard-hub",
       label: "Standard Hub",
       description: "Full hub visible, locker grid, integrated into scene",
-      promptText: `A BACE hub (from uploaded reference — reproduce EXACTLY, white/cream, locker grid intact). Compact rectangular container module, approximately 2.3m tall, 3-4m wide. Grid of locker compartments with metal doors. Small window section. 'bace' branding visible. WHITE/CREAM color. The hub sits DIRECTLY on the ground surface — cobblestone, asphalt, or pavement. NO concrete foundation. NO pedestal. NO platform — bottom edge touching the ground. The hub reads as natural urban infrastructure, belonging in the scene.`,
+      promptText: `A BACE hub (from uploaded reference — reproduce EXACTLY, light grey metallic, locker grid intact). Compact rectangular container module, approximately 2.3m tall, 3-4m wide. Grid of locker compartments with metal doors. Small window section. 'bace' branding visible. LIGHT GREY METALLIC color. The hub sits DIRECTLY on the ground surface — cobblestone, asphalt, or pavement. NO concrete foundation. NO pedestal. NO platform — bottom edge touching the ground. The hub reads as natural urban infrastructure, belonging in the scene.`,
     },
     {
       id: "hub-close-up",
       label: "Hub Close-Up Detail",
       description: "Tight framing on locker grid, material detail",
-      promptText: `A BACE hub in SHARP close-up detail — each locker compartment visible with shadow depth, metal door edges, the slight variation between closed doors. One locker is open, revealing a kraft-paper package inside — the paper's texture, a minimal stamp label, a small crease. The QR scanner panel area visible. The hub's material surface at close range: industrial white/cream finish, 'bace' branding, mounting hardware visible. Reproduce from uploaded reference EXACTLY. NO redesign. NO stylization.`,
+      promptText: `A BACE hub in SHARP close-up detail — each locker compartment visible with shadow depth, metal door edges, the slight variation between closed doors. One locker is open, revealing a kraft-paper package inside — the paper's texture, a minimal stamp label, a small crease. The QR scanner panel area visible. The hub's material surface at close range: industrial light grey metallic finish, 'bace' branding, mounting hardware visible. Reproduce from uploaded reference EXACTLY. NO redesign. NO stylization.`,
     },
   ],
 };

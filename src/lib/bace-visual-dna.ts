@@ -63,7 +63,7 @@ export const BACE_DNA_BLOCKS: DnaBlock[] = [
 // ─── Prompt Prefix (prepend to every scene prompt) ──────────────────────────
 
 export const BACE_PROMPT_PREFIX =
-  "REFERENCE IMAGES: The uploaded images show the EXACT BACE hub product. Reproduce its geometry, proportions, locker grid, window section, and form PRECISELY. Do not redesign, reinterpret, or stylize. The hub is white/cream as shown. The hub sits DIRECTLY on the ground surface with NO concrete foundation, NO pedestal, NO platform — bottom edge touching the ground. Place into scene as described below.";
+  "REFERENCE IMAGES: The uploaded images show the EXACT BACE hub product. Reproduce its geometry, proportions, locker grid, window section, and form PRECISELY. Do not redesign, reinterpret, or stylize. The hub is light grey metallic as shown. The hub sits DIRECTLY on the ground surface with NO concrete foundation, NO pedestal, NO platform — bottom edge touching the ground. Place into scene as described below.";
 
 // ─── Forbidden Words ────────────────────────────────────────────────────────
 
@@ -179,7 +179,7 @@ export const PRODUCT_RULES = {
   placement:
     "The BACE hub sits DIRECTLY on the ground — cobblestone, asphalt, pavement. NO concrete foundation. NO pedestal. NO raised platform.",
   accuracy:
-    "Compact rectangular container module, ~2.3m tall, 3-4m wide. Grid of locker compartments. Small window section. QR scanner panel. 'bace' branding. WHITE/CREAM color. Reproduce reference EXACTLY.",
+    "Compact rectangular container module, ~2.3m tall, 3-4m wide. Grid of locker compartments. Small window section. QR scanner panel. 'bace' branding. LIGHT GREY METALLIC color. Reproduce reference EXACTLY.",
   noGoldenHour:
     "NO golden hour. NO magic hour. NO amber wash. Use real varied natural daylight instead.",
 };
