@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { prompt } = await request.json();
+    const { prompt, referenceImages } = await request.json();
     if (!prompt || typeof prompt !== "string") {
       return NextResponse.json(
         { error: "A prompt is required" },
@@ -22,6 +22,30 @@ export async function POST(request: NextRequest) {
     }
 
     const ai = new GoogleGenAI({ apiKey });
+
+    // Build multi-part contents: reference images + text prompt
+    const contentParts: Array<string | { inlineData: { data: string; mimeType: string } }> = [];
+
+    // Add reference images as inline data parts
+    if (Array.isArray(referenceImages)) {
+      for (const ref of referenceImages) {
+        if (ref?.dataUrl && typeof ref.dataUrl === "string") {
+          const match = ref.dataUrl.match(/^data:(image\/[^;]+);base64,(.+)$/);
+          if (match) {
+            contentParts.push({ inlineData: { data: match[2], mimeType: match[1] } });
+          }
+        }
+      }
+    }
+
+    // Add text prompt with reference instruction if images are present
+    if (contentParts.length > 0) {
+      contentParts.push(
+        `Use the reference images above as visual guidance for the product design, shape, branding and proportions. Now generate the following scene:\n\n${prompt}`
+      );
+    } else {
+      contentParts.push(prompt);
+    }
 
     // Try image-capable models in order of preference
     const models = [
@@ -36,20 +60,20 @@ export async function POST(request: NextRequest) {
       try {
         const response = await ai.models.generateContent({
           model,
-          contents: prompt,
+          contents: contentParts as Parameters<typeof ai.models.generateContent>[0]["contents"],
           config: {
             responseModalities: ["Text", "Image"],
           },
         });
 
-        const parts = response.candidates?.[0]?.content?.parts;
-        if (!parts) continue;
+        const responseParts = response.candidates?.[0]?.content?.parts;
+        if (!responseParts) continue;
 
         let imageBase64: string | null = null;
         let mimeType: string = "image/png";
         let text: string | null = null;
 
-        for (const part of parts) {
+        for (const part of responseParts) {
           if (part.text) {
             text = part.text;
           } else if (part.inlineData) {

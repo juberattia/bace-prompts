@@ -20,7 +20,7 @@ import {
 const PHASES: Phase[] = ["brief", "concept", "development", "handoff"];
 
 function ProjectCard({ project }: { project: Project }) {
-  const { updateProjectPhase } = useStore();
+  const { updateProjectPhase, removeProject } = useStore();
   const [showMove, setShowMove] = useState(false);
 
   const overdue = isPast(new Date(project.deadline));
@@ -97,6 +97,18 @@ function ProjectCard({ project }: { project: Project }) {
                   {PHASE_COLORS[phase].label}
                 </button>
               ))}
+              <div className="border-t border-studio-border my-1" />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  removeProject(project._id);
+                  setShowMove(false);
+                }}
+                className="w-full text-left px-3 py-1.5 text-[12px] font-mono text-red-500 hover:bg-red-50 flex items-center gap-2 transition-colors"
+              >
+                Delete
+              </button>
             </div>
           </>
         )}

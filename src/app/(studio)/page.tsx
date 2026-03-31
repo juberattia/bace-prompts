@@ -14,13 +14,14 @@ import {
   Wand2,
   ArrowRight,
   Clock,
+  Trash2,
 } from "lucide-react";
 import { formatDistanceToNow, isPast } from "date-fns";
 
 const PHASES: Phase[] = ["brief", "concept", "development", "handoff"];
 
 export default function DashboardPage() {
-  const { projects, tasks, briefings } = useStore();
+  const { projects, tasks, briefings, removeTask } = useStore();
 
   // Stats
   const phaseCounts = PHASES.map((phase) => ({
@@ -136,7 +137,7 @@ export default function DashboardPage() {
               </p>
             ) : (
               recentTasks.map((task) => (
-                <StudioCard key={task._id} className="flex items-center gap-3">
+                <StudioCard key={task._id} className="flex items-center gap-3 group relative">
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-mono text-studio-text truncate">
                       {task.title}
@@ -144,6 +145,13 @@ export default function DashboardPage() {
                   </div>
                   <PriorityBadge priority={task.priority} />
                   <StatusBadge status={task.status} />
+                  <button
+                    onClick={() => removeTask(task._id)}
+                    className="opacity-0 group-hover:opacity-100 p-1 text-studio-muted hover:text-red-500 transition-all"
+                    title="Delete task"
+                  >
+                    <Trash2 size={13} />
+                  </button>
                 </StudioCard>
               ))
             )}

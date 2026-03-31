@@ -7,7 +7,7 @@ import StatusBadge from "@/components/studio/StatusBadge";
 import { useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
-import { Plus, Search, FileText } from "lucide-react";
+import { Plus, Search, FileText, Trash2 } from "lucide-react";
 import type { BriefingStatus } from "@/lib/design-tokens";
 
 const STATUS_FILTERS: { value: BriefingStatus | "all"; label: string }[] = [
@@ -18,7 +18,7 @@ const STATUS_FILTERS: { value: BriefingStatus | "all"; label: string }[] = [
 ];
 
 export default function BriefingsPage() {
-  const { briefings, projects } = useStore();
+  const { briefings, projects, removeBriefing } = useStore();
   const [statusFilter, setStatusFilter] = useState<BriefingStatus | "all">("all");
   const [search, setSearch] = useState("");
 
@@ -104,12 +104,21 @@ export default function BriefingsPage() {
           {filtered.map((briefing) => {
             const projectName = getProjectName(briefing.projectId);
             return (
-              <StudioCard key={briefing._id} hover className="space-y-2">
+              <StudioCard key={briefing._id} hover className="space-y-2 group relative">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="text-[14px] font-mono text-studio-text font-medium leading-snug">
                     {briefing.title}
                   </h3>
-                  <StatusBadge status={briefing.status} type="briefing" />
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => removeBriefing(briefing._id)}
+                      className="opacity-0 group-hover:opacity-100 p-1 text-studio-muted hover:text-red-500 transition-all"
+                      title="Delete briefing"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                    <StatusBadge status={briefing.status} type="briefing" />
+                  </div>
                 </div>
                 {projectName && (
                   <p className="text-[11px] font-mono text-studio-muted">
