@@ -10,6 +10,7 @@ import {
   Box,
   ImageIcon,
   PenTool,
+  Layers,
   Palette,
   X,
 } from "lucide-react";
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { href: "/projects", label: "Projects", icon: FolderKanban },
   { href: "/briefings", label: "Briefings", icon: FileText },
   { href: "/prompt-builder", label: "Prompt Builder", icon: Wand2 },
+  { href: "/workspaces", label: "Workspaces", icon: Layers },
   { href: "/viewer", label: "3D Viewer", icon: Box },
   { href: "/library", label: "Image Library", icon: ImageIcon },
   { href: "/inpainting", label: "Inpainting", icon: PenTool },
