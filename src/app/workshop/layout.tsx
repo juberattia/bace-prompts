@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "AI Visuals Masterclass — The 7 Pillars of Visual Engineering",
+  title: "AI Visuals Masterclass — The 7 Pillars of Visual Creation System",
   description:
     "Full-day workshop: learn the system behind publishable AI-generated images using the 7 Pillars framework.",
 };

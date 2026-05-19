@@ -15,9 +15,6 @@ export function WorkshopShell() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
       {/* Header */}
       <div className="mb-8 sm:mb-10">
-        <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-studio-muted mb-3">
-          {WORKSHOP_META.location} &middot; {WORKSHOP_META.priceRange}&euro;
-        </div>
         <h1 className="font-display text-2xl sm:text-4xl font-bold text-studio-text tracking-tight mb-1">
           {WORKSHOP_META.title}
         </h1>

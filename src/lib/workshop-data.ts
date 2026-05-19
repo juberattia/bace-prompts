@@ -4,7 +4,7 @@ import type { WorkshopPhase, WorkshopPillar, WorkshopMeta } from "./workshop-typ
 
 export const WORKSHOP_META: WorkshopMeta = {
   title: "AI Visuals Masterclass",
-  subtitle: "The 7 Pillars of Visual Engineering",
+  subtitle: "The 7 Pillars of Visual Creation System",
   location: "Barcelona",
   priceRange: "250-299",
 };
@@ -51,7 +51,7 @@ export const WORKSHOP_PHASES: WorkshopPhase[] = [
         id: "f-2",
         time: "9:30",
         duration: "45 min",
-        title: "The 7 Pillars of Visual Engineering",
+        title: "The 7 Pillars of Visual Creation System",
         bullets: [
           "PILLAR 1 — DIRECTION: Command like a director, not describe like a tourist. Use imperative verbs",
           "PILLAR 2 — SPECIFICITY: Camera, lens, aperture, color temperature. Technical precision is 40% of any result",
