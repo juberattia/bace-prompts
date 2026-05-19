@@ -3,7 +3,7 @@ import type { WorkshopPhase, WorkshopPillar, WorkshopMeta } from "./workshop-typ
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 export const WORKSHOP_META: WorkshopMeta = {
-  title: "AI Visuals Masterclass",
+  title: "Mastering AI Visuals",
   subtitle: "The 7 Pillars of Visual Creation System",
   location: "Barcelona",
   priceRange: "250-299",
@@ -243,6 +243,7 @@ export const WORKSHOP_PILLARS: WorkshopPillar[] = [
     number: "01",
     name: "Direction Over Description",
     principle: "Command like a film director, not describe like a tourist",
+    image: "/pillar-01.png",
     promptExample:
       "Golden hour backlight, 3200K warmth, rim lighting silhouetting peaks, position product in left third of frame",
     proTip:
@@ -271,6 +272,7 @@ export const WORKSHOP_PILLARS: WorkshopPillar[] = [
     number: "02",
     name: "Technical Specificity",
     principle: "Always name camera, lens, aperture, and lighting",
+    image: "/pillar-02.png",
     promptExample:
       "Shot on Hasselblad 503CW, 100mm macro lens, f/4, soft diffused window light from left at 5600K, slight film grain",
     proTip:
@@ -299,6 +301,7 @@ export const WORKSHOP_PILLARS: WorkshopPillar[] = [
     number: "03",
     name: "Strategic Imperfection",
     principle: "Perfect = Fake. Imperfect = Trustworthy",
+    image: "/pillar-03.png",
     promptExample:
       "Film grain texture, dust particles floating in air, fabric wrinkles from movement, slight lens vignette, chromatic aberration on high-contrast edges",
     proTip:
@@ -327,6 +330,7 @@ export const WORKSHOP_PILLARS: WorkshopPillar[] = [
     number: "04",
     name: "Mood Before Objects",
     principle: "Start with emotion — define feeling BEFORE describing product",
+    image: "/pillar-04.png",
     promptExample:
       "Intimate morning atmosphere, warm and unhurried, soft diffused light through linen curtains, worn oak bathroom shelf, Mediterranean apartment",
     proTip:
@@ -355,6 +359,7 @@ export const WORKSHOP_PILLARS: WorkshopPillar[] = [
     number: "05",
     name: "Systems Over Single Images",
     principle: "Think in product lines (50 shots), not one-offs",
+    image: "/pillar-05.png",
     promptExample:
       "Generate hero image with detailed prompt. Save as reference. Upload reference + simple scene variations. Result: exact same product in unlimited scenes",
     proTip:
@@ -383,6 +388,7 @@ export const WORKSHOP_PILLARS: WorkshopPillar[] = [
     number: "06",
     name: "Frame-Based Thinking",
     principle: "Plan compositions like a filmmaker — three depth planes minimum",
+    image: "/pillar-06.png",
     promptExample:
       "Shot through frosted glass foreground creating soft bokeh, product positioned in left third of midground, blurred Mediterranean terrace in background",
     proTip:
@@ -411,6 +417,7 @@ export const WORKSHOP_PILLARS: WorkshopPillar[] = [
     number: "07",
     name: "Tool Fluency",
     principle: "Match the tool to the task — each has a sweet spot",
+    image: "/pillar-07.png",
     promptExample:
       "Nano Banana Pro for consistent product shots (80%), Midjourney v7 for editorial and artistic (15%), Higgsfield for video and 360 (5%)",
     proTip:

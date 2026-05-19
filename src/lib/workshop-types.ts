@@ -33,6 +33,7 @@ export interface WorkshopPillar {
   principle: string;
   promptExample: string;
   proTip: string;
+  image: string;
   details: PillarDetail[];
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,17 @@ export function PillarCard({ pillar, isExpanded, onToggle }: PillarCardProps) {
             className="overflow-hidden"
           >
             <div className="px-5 pb-5 border-t border-studio-border pt-4">
+              {/* Pillar image */}
+              <div className="relative w-full aspect-[4/5] mb-4 overflow-hidden bg-studio-bg">
+                <Image
+                  src={pillar.image}
+                  alt={`${pillar.name} — ${pillar.principle}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 700px"
+                />
+              </div>
+
               {/* Detail cards grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
                 {pillar.details.map((detail) => (
