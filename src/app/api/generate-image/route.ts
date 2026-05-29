@@ -7,8 +7,26 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "GOOGLE_GEMINI_API_KEY not configured. Add it to .env.local" },
+      { error: "Server configuration error. Please contact the administrator." },
       { status: 500 }
+    );
+  }
+
+  // Content-Type validation
+  const contentType = request.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    return NextResponse.json(
+      { error: "Content-Type must be application/json" },
+      { status: 415 }
+    );
+  }
+
+  // Body size limit: 20MB (base64 reference images can be large)
+  const contentLength = parseInt(request.headers.get("content-length") || "0", 10);
+  if (contentLength > 20_000_000) {
+    return NextResponse.json(
+      { error: "Request body too large" },
+      { status: 413 }
     );
   }
 
@@ -107,8 +125,10 @@ export async function POST(request: NextRequest) {
       { status: 402 }
     );
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("Image generation error:", message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Image generation error:", err instanceof Error ? err.message : err);
+    return NextResponse.json(
+      { error: "An internal error occurred. Please try again." },
+      { status: 500 }
+    );
   }
 }

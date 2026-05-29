@@ -7,8 +7,26 @@ export async function POST(request: NextRequest) {
   const falKey = process.env.FAL_KEY;
   if (!falKey) {
     return NextResponse.json(
-      { error: "FAL_KEY not configured. Add it to .env.local" },
+      { error: "Server configuration error. Please contact the administrator." },
       { status: 500 }
+    );
+  }
+
+  // Content-Type validation
+  const contentType = request.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    return NextResponse.json(
+      { error: "Content-Type must be application/json" },
+      { status: 415 }
+    );
+  }
+
+  // Body size limit: 1MB
+  const contentLength = parseInt(request.headers.get("content-length") || "0", 10);
+  if (contentLength > 1_000_000) {
+    return NextResponse.json(
+      { error: "Request body too large" },
+      { status: 413 }
     );
   }
 
@@ -61,9 +79,10 @@ export async function POST(request: NextRequest) {
       image: `data:${contentType};base64,${base64}`,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    const details = err instanceof Error ? JSON.stringify(err, Object.getOwnPropertyNames(err)) : String(err);
-    console.error("FAL.ai generation error:", message, details);
-    return NextResponse.json({ error: message, details }, { status: 500 });
+    console.error("FAL.ai generation error:", err instanceof Error ? err.message : err);
+    return NextResponse.json(
+      { error: "An internal error occurred. Please try again." },
+      { status: 500 }
+    );
   }
 }
